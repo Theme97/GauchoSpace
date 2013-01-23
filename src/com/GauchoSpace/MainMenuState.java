@@ -1,4 +1,4 @@
-package com.theme97.GauchoSpace;
+package com.GauchoSpace;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -6,10 +6,10 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class GameplayState extends BasicGameState {
+public class MainMenuState extends BasicGameState {
 	int stateID = 0;
 	
-	public GameplayState(int stateID) {
+	public MainMenuState(int stateID) {
 		this.stateID = stateID;
 	}
 	

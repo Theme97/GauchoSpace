@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.theme97.GauchoSpace;
+package com.GauchoSpace;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
