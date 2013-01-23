@@ -7,10 +7,11 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class GameplayState extends BasicGameState {
-	int stateID = 0;
+	private int stateID = 0;
 	
 	public GameplayState(GauchoSpace.STATE state) {
-		stateID = state.ordinal();
+		super();
+		this.stateID = state.ordinal();
 	}
 	
 	@Override
