@@ -60,12 +60,10 @@ public class TestPlayer implements ICharacter {
 		
 		if (slow) {
 			// TODO let's just make this an image
-			Color oldColor = graphics.getColor();
 			graphics.setColor(Color.red);
 			graphics.fillArc(x - radius, y - radius, radius * 2, radius * 2, 0, 360);
 			graphics.setColor(Color.white);
 			graphics.fillArc(x - radius + 1, y - radius + 1, radius * 2 - 2, radius * 2 - 2, 0, 360);
-			graphics.setColor(oldColor);
 		}
 	}
 

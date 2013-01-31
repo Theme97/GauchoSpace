@@ -4,15 +4,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.GauchoSpace.Players.*;
 
 public class GameField {
+	private LevelManager levelManager;
 	private ICharacter character;
 	private ICharacter boss;
 	private Collection<ICharacter> enemies;
@@ -20,6 +23,7 @@ public class GameField {
 	private Collection<IBullet> enemyBullets;
 	private Image uiBackground;
 	private Image fieldBackground;
+	private boolean paused;
 	private int lives;
 	private int score;
 	private int width;
@@ -27,6 +31,7 @@ public class GameField {
 	private float fps;
 	
 	public GameField() throws SlickException {
+		levelManager = new LevelManager(this);
 		character = new TestPlayer(this);
 		boss = null;
 		enemies = new Vector<ICharacter>();
@@ -34,6 +39,7 @@ public class GameField {
 		enemyBullets = new Vector<IBullet>();
 		uiBackground = new Image("res/background_ui.png");
 		fieldBackground = new Image("res/background_field.jpg");
+		paused = false;
 		lives = 3;
 		score = 0;
 		width = 858;
@@ -70,6 +76,12 @@ public class GameField {
 		for (IBullet bullet : playerBullets) bullet.render(gc, game, graphics);
 		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
 		
+		// pause screen
+		if (paused) {
+			graphics.setColor(new Color(0, 0, 0, 192));
+			graphics.fillRect(0, 0, width, height);
+		}
+		
 		// reset transformations and clips
 		graphics.resetTransform();
 		graphics.clearWorldClip();
@@ -77,12 +89,21 @@ public class GameField {
 		// draw UI
 		
 		// ghetto FPS counters
+		graphics.setColor(new Color(255, 255, 255));
 		graphics.drawString(String.format("gfx: %d\nfps: %.2f", gc.getFPS(), fps), 1180, 976);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		// moving avg for FPS
 		fps = (1000f / delta) * 0.2f + fps * 0.8f;
+		
+		// pause check
+		boolean pauseToggle = gc.getInput().isKeyPressed(Input.KEY_ESCAPE);
+		if (pauseToggle) paused = !paused;
+		if (paused) return;
+		
+		// update level
+		levelManager.update(gc, game, delta);
 		
 		// move character
 		character.update(gc, game, delta);
