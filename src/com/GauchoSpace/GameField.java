@@ -126,4 +126,20 @@ public class GameField {
 			}
 		}
 	}
+	
+	public void addPlayerBullet(IBullet bullet) {
+		playerBullets.add(bullet);
+	}
+	
+	public Collection<IBullet> getPlayerBullets() {
+		return playerBullets;
+	}
+	
+	public void addEnemyBullet(IBullet bullet) {
+		enemyBullets.add(bullet);
+	}
+	
+	public Collection<IBullet> getEnemyBullets() {
+		return enemyBullets;
+	}
 }
