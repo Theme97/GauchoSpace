@@ -7,11 +7,14 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class GameplayState extends BasicGameState {
-	private int stateID = 0;
+	private int stateID;
+	private GameField field;
 	
-	public GameplayState(GauchoSpace.STATE state) {
+	public GameplayState(GauchoSpace.STATE state) throws SlickException {
 		super();
 		this.stateID = state.ordinal();
+		
+		field = new GameField();
 	}
 	
 	@Override
@@ -20,23 +23,17 @@ public class GameplayState extends BasicGameState {
 	}
 
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
-			throws SlickException {
-		// TODO Auto-generated method stub
-		
+	public void init(GameContainer gc, StateBasedGame game) throws SlickException {
+		gc.setMinimumLogicUpdateInterval(16);
 	}
 
 	@Override
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2)
-			throws SlickException {
-		// TODO Auto-generated method stub
-		
+	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) throws SlickException {
+		field.render(gc, game, graphics);
 	}
 
 	@Override
-	public void update(GameContainer arg0, StateBasedGame arg1, int arg2)
-			throws SlickException {
-		// TODO Auto-generated method stub
-		
+	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
+		field.update(gc, game, delta);
 	}
 }
