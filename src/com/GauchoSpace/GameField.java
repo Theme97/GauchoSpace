@@ -115,7 +115,21 @@ public class GameField {
 		for (ICharacter enemy : enemies) enemy.update(gc, game, delta);
 		
 		// move bullets
-		Iterator<IBullet> i = enemyBullets.iterator();
+		Iterator<IBullet> i;
+		
+		// - 1: player bullets
+		i = playerBullets.iterator();
+		while (i.hasNext()) {
+			IBullet bullet = i.next();
+			bullet.update(gc, game, delta);
+			
+			if (bullet.isDeletable()) {
+				i.remove();
+			}
+		}
+		
+		// - 2: enemy bullets
+		i = enemyBullets.iterator();
 		while (i.hasNext()) {
 			IBullet bullet = i.next();
 			bullet.update(gc, game, delta);

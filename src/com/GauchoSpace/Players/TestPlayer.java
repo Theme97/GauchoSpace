@@ -10,6 +10,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.GauchoSpace.GameField;
+import com.GauchoSpace.IBullet;
 import com.GauchoSpace.ICharacter;
 
 public class TestPlayer implements ICharacter {
@@ -25,15 +26,18 @@ public class TestPlayer implements ICharacter {
 	private int speed_fast;
 	private int speed_slow;
 	
+	private int ticksToNextShot;
+	
 	public TestPlayer(GameField field) throws SlickException {
 		this.field = field;
+		sprite = new Image("res/char_test.png");
 		invincible = false;
 		slow = false;
-		sprite = new Image("res/char_test.png");
-		speed_fast = 5;
-		speed_slow = 2;
 		pos = new Vector2f();
 		radius = 4;
+		speed_fast = 5;
+		speed_slow = 2;
+		ticksToNextShot = 0;
 	}
 	
 	public Vector2f getPos() {
@@ -87,8 +91,61 @@ public class TestPlayer implements ICharacter {
 		if (input.isKeyDown(Input.KEY_DOWN)) vel.y += 1;
 		pos.add(vel.normalise().scale(speed));
 		
+		// shooting
+		if (ticksToNextShot > 0) ticksToNextShot--;
+		if (ticksToNextShot <= 0 && input.isKeyDown(Input.KEY_Z)) {
+			if (slow) {
+				field.addPlayerBullet(new PlayerBullet1(field, pos.x, pos.y, 10, 10, Color.orange));
+				ticksToNextShot = 10;
+			} else {
+				field.addPlayerBullet(new PlayerBullet1(field, pos.x - 8, pos.y, 15, 5, Color.yellow));
+				field.addPlayerBullet(new PlayerBullet1(field, pos.x + 8, pos.y, 15, 5, Color.yellow));
+				ticksToNextShot = 5;
+			}
+		}
+		
 		// clamps
 		pos.x = Math.min(Math.max(pos.x, 12), field.getWidth() - 12);
 		pos.y = Math.min(Math.max(pos.y, 20), field.getHeight() - 20);
+	}
+}
+
+class PlayerBullet1 implements IBullet {
+	private GameField field;
+	private Vector2f pos;
+	private float speed;
+	private float width;
+	private Color color;
+	private boolean deletable;
+	
+	public PlayerBullet1(GameField field, float x, float y, float speed, float width, Color color) {
+		this.field = field;
+		this.pos = new Vector2f(x, y);
+		this.speed = speed;
+		this.width = width;
+		this.color = color;
+	}
+	
+	@Override
+	public boolean isDeletable() {
+		return deletable;
+	}
+
+	@Override
+	public boolean isColliding(ICharacter character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
+		graphics.setColor(color);
+		graphics.fillRoundRect((int)(pos.x - 0.5 * width), (int)(pos.y - 2.5 * width), width, width * 5, (int)width);
+	}
+
+	@Override
+	public void update(GameContainer gc, StateBasedGame game, int delta) {
+		pos.add(new Vector2f(0, -speed));
+		if (pos.y + width * 5 < 0) deletable = true;
 	}
 }
