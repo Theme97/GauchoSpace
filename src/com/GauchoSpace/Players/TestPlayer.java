@@ -42,7 +42,7 @@ public class TestPlayer implements ICharacter {
 	
 	@Override
 	public Vector2f getPos() {
-		return pos;
+		return pos.copy();
 	}
 	
 	@Override

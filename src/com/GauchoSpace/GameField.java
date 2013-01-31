@@ -47,6 +47,10 @@ public class GameField {
 		fps = 0.0f;
 	}
 	
+	public ICharacter getPlayer() {
+		return character;
+	}
+	
 	public int getWidth() {
 		return width;
 	}
