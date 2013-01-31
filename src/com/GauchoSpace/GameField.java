@@ -90,7 +90,7 @@ public class GameField {
 		
 		// ghetto debug/FPS counters
 		graphics.setColor(Color.white);
-		graphics.drawString("blt: " + enemyBullets.size(), 1080, 976);
+		graphics.drawString("blt: " + enemyBullets.size() + "\n   : " + playerBullets.size(), 1080, 976);
 		graphics.drawString(String.format("gfx: %d\nfps: %.2f", gc.getFPS(), fps), 1180, 976);
 	}
 	

@@ -5,6 +5,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
 
 public interface IBullet {
+	public int getDamage();
 	public boolean isDeletable();
 	public boolean isColliding(ICharacter character);
 	

@@ -30,6 +30,11 @@ public class LinearBullet implements IBullet {
 	}
 	
 	@Override
+	public int getDamage() {
+		return 1;
+	}
+	
+	@Override
 	public boolean isDeletable() {
 		return deletable;
 	}

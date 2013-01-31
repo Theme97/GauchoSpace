@@ -14,6 +14,8 @@ public interface ICharacter {
 	public int getHealth();
 	public boolean getInvincibility();
 	
+	public void tookDamage(int damage);
+	
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics);
 	public void update(GameContainer gc, StateBasedGame game, int delta);
 }

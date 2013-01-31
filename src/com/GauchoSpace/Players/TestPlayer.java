@@ -40,26 +40,36 @@ public class TestPlayer implements ICharacter {
 		ticksToNextShot = 0;
 	}
 	
+	@Override
 	public Vector2f getPos() {
 		return pos;
 	}
 	
+	@Override
 	public void setPos(Vector2f pos) {
 		this.pos = pos;
 	}
 	
+	@Override
 	public int getRadius() {
 		return radius;
 	}
 	
+	@Override
 	public int getHealth() {
 		return 1;
 	}
-	
+	@Override
 	public boolean getInvincibility() {
 		return invincible;
 	}
 	
+	@Override
+	public void tookDamage(int damage) {
+		// die
+	}
+	
+	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
 		int x = (int)pos.x;
 		int y = (int)pos.y;
@@ -74,7 +84,8 @@ public class TestPlayer implements ICharacter {
 			graphics.fillArc(x - radius + 1, y - radius + 1, radius * 2 - 2, radius * 2 - 2, 0, 360);
 		}
 	}
-
+	
+	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		// check keys
 		Input input = gc.getInput();
@@ -95,11 +106,11 @@ public class TestPlayer implements ICharacter {
 		if (ticksToNextShot > 0) ticksToNextShot--;
 		if (ticksToNextShot <= 0 && input.isKeyDown(Input.KEY_Z)) {
 			if (slow) {
-				field.addPlayerBullet(new PlayerBullet1(field, pos.x, pos.y, 10, 10, Color.orange));
+				field.addPlayerBullet(new PlayerBullet1(field, pos.x, pos.y, 10, 10, 5, Color.orange));
 				ticksToNextShot = 10;
 			} else {
-				field.addPlayerBullet(new PlayerBullet1(field, pos.x - 8, pos.y, 15, 5, Color.yellow));
-				field.addPlayerBullet(new PlayerBullet1(field, pos.x + 8, pos.y, 15, 5, Color.yellow));
+				field.addPlayerBullet(new PlayerBullet1(field, pos.x - 8, pos.y, 15, 5, 1, Color.yellow));
+				field.addPlayerBullet(new PlayerBullet1(field, pos.x + 8, pos.y, 15, 5, 1, Color.yellow));
 				ticksToNextShot = 5;
 			}
 		}
@@ -115,15 +126,21 @@ class PlayerBullet1 implements IBullet {
 	private Vector2f pos;
 	private float speed;
 	private float width;
+	private int damage;
 	private Color color;
 	private boolean deletable;
 	
-	public PlayerBullet1(GameField field, float x, float y, float speed, float width, Color color) {
+	public PlayerBullet1(GameField field, float x, float y, float speed, float width, int damage, Color color) {
 		this.field = field;
 		this.pos = new Vector2f(x, y);
 		this.speed = speed;
 		this.width = width;
 		this.color = color;
+	}
+	
+	@Override
+	public int getDamage() {
+		return damage;
 	}
 	
 	@Override
