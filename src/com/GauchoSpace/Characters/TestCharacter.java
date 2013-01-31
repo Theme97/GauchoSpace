@@ -87,5 +87,9 @@ public class TestCharacter implements ICharacter {
 		if (input.isKeyDown(Input.KEY_DOWN)) vel.y += 1;
 		vel.normalise().scale(speed);
 		pos.add(vel);
+		
+		// clamps
+		pos.x = Math.min(Math.max(pos.x, 12), field.getWidth() - 12);
+		pos.y = Math.min(Math.max(pos.y, 12), field.getHeight() - 20);
 	}
 }
