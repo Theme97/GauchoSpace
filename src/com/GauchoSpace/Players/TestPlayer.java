@@ -1,4 +1,4 @@
-package com.GauchoSpace.Characters;
+package com.GauchoSpace.Players;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -12,7 +12,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import com.GauchoSpace.GameField;
 import com.GauchoSpace.ICharacter;
 
-public class TestCharacter implements ICharacter {
+public class TestPlayer implements ICharacter {
 	private GameField field;
 	private Image sprite;
 	
@@ -25,7 +25,7 @@ public class TestCharacter implements ICharacter {
 	private int speed_fast;
 	private int speed_slow;
 	
-	public TestCharacter(GameField field) throws SlickException {
+	public TestPlayer(GameField field) throws SlickException {
 		this.field = field;
 		invincible = false;
 		slow = false;
@@ -36,14 +36,6 @@ public class TestCharacter implements ICharacter {
 		radius = 3;
 	}
 	
-	public GameField getGameField() {
-		return field;
-	}
-	
-	public void setGameField(GameField field) {
-		this.field = field;
-	}
-	
 	public Vector2f getPos() {
 		return pos;
 	}
@@ -52,12 +44,12 @@ public class TestCharacter implements ICharacter {
 		this.pos = pos;
 	}
 	
-	public boolean getInvincibility() {
-		return invincible;
+	public int getHealth() {
+		return 1;
 	}
 	
-	public void setInvincibility(boolean invincibility) {
-		this.invincible = invincibility;
+	public boolean getInvincibility() {
+		return invincible;
 	}
 	
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {

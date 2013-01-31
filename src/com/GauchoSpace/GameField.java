@@ -10,10 +10,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.GauchoSpace.Characters.*; // TODO MainMenuState should pass the character through the constructor
+import com.GauchoSpace.Players.*;
 
 public class GameField {
 	private ICharacter character;
+	private ICharacter boss;
+	private Collection<ICharacter> enemies;
 	private Collection<IBullet> playerBullets;
 	private Collection<IBullet> enemyBullets;
 	private Image uiBackground;
@@ -25,13 +27,18 @@ public class GameField {
 	private float fps;
 	
 	public GameField() throws SlickException {
-		character = new TestCharacter(this);
+		character = new TestPlayer(this);
+		boss = null;
+		enemies = new Vector<ICharacter>();
 		playerBullets = new Vector<IBullet>();
 		enemyBullets = new Vector<IBullet>();
 		uiBackground = new Image("res/background_ui.png");
 		fieldBackground = new Image("res/background_field.jpg");
+		lives = 3;
+		score = 0;
 		width = 858;
 		height = 1000;
+		fps = 0.0f;
 	}
 	
 	public int getWidth() {
@@ -56,10 +63,12 @@ public class GameField {
 		// draw field background
 		fieldBackground.draw();
 		
-		// render characters and bullets
+		// render order: enemy bullets, enemies, boss, player, player bullets
+		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
+		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
+		if (boss != null) boss.render(gc, game, graphics);
 		character.render(gc, game, graphics);
 		for (IBullet bullet : playerBullets) bullet.render(gc, game, graphics);
-		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
 		
 		// reset transformations and clips
 		graphics.resetTransform();
@@ -80,6 +89,8 @@ public class GameField {
 		boolean checkCollisions = !character.getInvincibility();
 		
 		// move enemies
+		if (boss != null) boss.update(gc, game, delta);
+		for (ICharacter enemy : enemies) enemy.update(gc, game, delta);
 		
 		// move bullets
 		Iterator<IBullet> i = playerBullets.iterator();
