@@ -10,6 +10,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.GauchoSpace.Characters.*; // TODO MainMenuState should pass the character through the constructor
+
 public class GameField {
 	private ICharacter character;
 	private Collection<IBullet> playerBullets;
@@ -23,7 +25,7 @@ public class GameField {
 	private float fps;
 	
 	public GameField() throws SlickException {
-		character = new CharacterTest(this);
+		character = new TestCharacter(this);
 		playerBullets = new Vector<IBullet>();
 		enemyBullets = new Vector<IBullet>();
 		uiBackground = new Image("res/background_ui.png");

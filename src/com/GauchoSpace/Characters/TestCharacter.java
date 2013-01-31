@@ -1,4 +1,4 @@
-package com.GauchoSpace;
+package com.GauchoSpace.Characters;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -8,7 +8,10 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class CharacterTest implements ICharacter {
+import com.GauchoSpace.GameField;
+import com.GauchoSpace.ICharacter;
+
+public class TestCharacter implements ICharacter {
 	private GameField field;
 	private boolean invincible;
 	private boolean slow;
@@ -17,7 +20,7 @@ public class CharacterTest implements ICharacter {
 	private int speed_slow;
 	private Vector2f pos;
 	
-	public CharacterTest(GameField field) throws SlickException {
+	public TestCharacter(GameField field) throws SlickException {
 		this.field = field;
 		invincible = false;
 		slow = false;
