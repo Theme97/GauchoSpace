@@ -89,7 +89,7 @@ public class GameField {
 		// draw UI
 		
 		// ghetto FPS counters
-		graphics.setColor(new Color(255, 255, 255));
+		graphics.setColor(Color.white);
 		graphics.drawString(String.format("gfx: %d\nfps: %.2f", gc.getFPS(), fps), 1180, 976);
 	}
 	
