@@ -1,5 +1,6 @@
 package com.GauchoSpace.Characters;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -19,6 +20,7 @@ public class TestCharacter implements ICharacter {
 	private int speed_fast;
 	private int speed_slow;
 	private Vector2f pos;
+	private float radius;
 	
 	public TestCharacter(GameField field) throws SlickException {
 		this.field = field;
@@ -28,6 +30,7 @@ public class TestCharacter implements ICharacter {
 		speed_fast = 5;
 		speed_slow = 2;
 		pos = new Vector2f(50.0f, 50.0f);
+		radius = 3.0f;
 	}
 	
 	public GameField getGameField() {
@@ -56,6 +59,16 @@ public class TestCharacter implements ICharacter {
 	
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
 		sprite.drawCentered(pos.x, pos.y);
+		
+		if (slow) {
+			// TODO let's just make this an image
+			Color oldColor = graphics.getColor();
+			graphics.setColor(Color.red);
+			graphics.fillArc(pos.x - radius, pos.y - radius, radius * 2, radius * 2, 0, 360);
+			graphics.setColor(Color.white);
+			graphics.fillArc(pos.x - radius + 1, pos.y - radius + 1, radius * 2 - 2, radius * 2 - 2, 0, 360);
+			graphics.setColor(oldColor);
+		}
 	}
 
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
