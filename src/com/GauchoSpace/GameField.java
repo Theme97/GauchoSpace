@@ -63,12 +63,12 @@ public class GameField {
 		// draw field background
 		fieldBackground.draw();
 		
-		// render order: enemy bullets, enemies, boss, player, player bullets
-		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
+		// render order: enemies, boss, player, player bullets, enemy bullets
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
 		if (boss != null) boss.render(gc, game, graphics);
 		character.render(gc, game, graphics);
 		for (IBullet bullet : playerBullets) bullet.render(gc, game, graphics);
+		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
 		
 		// reset transformations and clips
 		graphics.resetTransform();
