@@ -34,7 +34,7 @@ public class TestPlayer implements ICharacter {
 		invincible = false;
 		slow = false;
 		pos = new Vector2f();
-		radius = 4;
+		radius = 3;
 		speed_fast = 5;
 		speed_slow = 2;
 		ticksToNextShot = 0;
@@ -79,9 +79,9 @@ public class TestPlayer implements ICharacter {
 		if (slow) {
 			// TODO let's just make this an image
 			graphics.setColor(Color.red);
-			graphics.fillArc(x - radius, y - radius, radius * 2, radius * 2, 0, 360);
+			graphics.fillArc(x - radius - 1, y - radius - 1, radius * 2 + 2, radius * 2 + 2, 0, 360);
 			graphics.setColor(Color.white);
-			graphics.fillArc(x - radius + 1, y - radius + 1, radius * 2 - 2, radius * 2 - 2, 0, 360);
+			graphics.fillArc(x - radius, y - radius, radius * 2, radius * 2, 0, 360);
 		}
 	}
 	
