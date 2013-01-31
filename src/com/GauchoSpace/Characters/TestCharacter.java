@@ -14,13 +14,16 @@ import com.GauchoSpace.ICharacter;
 
 public class TestCharacter implements ICharacter {
 	private GameField field;
+	private Image sprite;
+	
 	private boolean invincible;
 	private boolean slow;
-	private Image sprite;
+	
+	private Vector2f pos;
+	private int radius;
+	
 	private int speed_fast;
 	private int speed_slow;
-	private Vector2f pos;
-	private float radius;
 	
 	public TestCharacter(GameField field) throws SlickException {
 		this.field = field;
@@ -29,8 +32,8 @@ public class TestCharacter implements ICharacter {
 		sprite = new Image("res/char_test.png");
 		speed_fast = 5;
 		speed_slow = 2;
-		pos = new Vector2f(50.0f, 50.0f);
-		radius = 3.0f;
+		pos = new Vector2f();
+		radius = 3;
 	}
 	
 	public GameField getGameField() {
@@ -41,12 +44,12 @@ public class TestCharacter implements ICharacter {
 		this.field = field;
 	}
 	
-	public Vector2f getPosition() {
+	public Vector2f getPos() {
 		return pos;
 	}
 	
-	public void setPosition(Vector2f position) {
-		this.pos = position;
+	public void setPos(Vector2f pos) {
+		this.pos = pos;
 	}
 	
 	public boolean getInvincibility() {
@@ -58,15 +61,18 @@ public class TestCharacter implements ICharacter {
 	}
 	
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
-		sprite.drawCentered(pos.x, pos.y);
+		int x = (int)pos.x;
+		int y = (int)pos.y;
+		
+		sprite.drawCentered(x, y);
 		
 		if (slow) {
 			// TODO let's just make this an image
 			Color oldColor = graphics.getColor();
 			graphics.setColor(Color.red);
-			graphics.fillArc(pos.x - radius, pos.y - radius, radius * 2, radius * 2, 0, 360);
+			graphics.fillArc(x - radius, y - radius, radius * 2, radius * 2, 0, 360);
 			graphics.setColor(Color.white);
-			graphics.fillArc(pos.x - radius + 1, pos.y - radius + 1, radius * 2 - 2, radius * 2 - 2, 0, 360);
+			graphics.fillArc(x - radius + 1, y - radius + 1, radius * 2 - 2, radius * 2 - 2, 0, 360);
 			graphics.setColor(oldColor);
 		}
 	}
@@ -85,11 +91,10 @@ public class TestCharacter implements ICharacter {
 		if (input.isKeyDown(Input.KEY_RIGHT)) vel.x += 1;
 		if (input.isKeyDown(Input.KEY_UP)) vel.y -= 1;
 		if (input.isKeyDown(Input.KEY_DOWN)) vel.y += 1;
-		vel.normalise().scale(speed);
-		pos.add(vel);
+		pos.add(vel.normalise().scale(speed));
 		
 		// clamps
 		pos.x = Math.min(Math.max(pos.x, 12), field.getWidth() - 12);
-		pos.y = Math.min(Math.max(pos.y, 12), field.getHeight() - 20);
+		pos.y = Math.min(Math.max(pos.y, 20), field.getHeight() - 20);
 	}
 }

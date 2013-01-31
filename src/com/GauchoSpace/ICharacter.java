@@ -9,8 +9,8 @@ public interface ICharacter {
 	public GameField getGameField();
 	public void setGameField(GameField field);
 	
-	public Vector2f getPosition();
-	public void setPosition(Vector2f position);
+	public Vector2f getPos();
+	public void setPos(Vector2f pos);
 	
 	public boolean getInvincibility();
 	public void setInvincibility(boolean invincibility);
