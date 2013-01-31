@@ -9,6 +9,8 @@ public interface ICharacter {
 	public Vector2f getPos();
 	public void setPos(Vector2f pos);
 	
+	public int getRadius();
+	
 	public int getHealth();
 	public boolean getInvincibility();
 	

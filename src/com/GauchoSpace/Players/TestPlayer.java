@@ -33,7 +33,7 @@ public class TestPlayer implements ICharacter {
 		speed_fast = 5;
 		speed_slow = 2;
 		pos = new Vector2f();
-		radius = 3;
+		radius = 4;
 	}
 	
 	public Vector2f getPos() {
@@ -42,6 +42,10 @@ public class TestPlayer implements ICharacter {
 	
 	public void setPos(Vector2f pos) {
 		this.pos = pos;
+	}
+	
+	public int getRadius() {
+		return radius;
 	}
 	
 	public int getHealth() {

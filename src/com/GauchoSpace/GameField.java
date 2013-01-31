@@ -88,8 +88,9 @@ public class GameField {
 		
 		// draw UI
 		
-		// ghetto FPS counters
+		// ghetto debug/FPS counters
 		graphics.setColor(Color.white);
+		graphics.drawString("blt: " + enemyBullets.size(), 1080, 976);
 		graphics.drawString(String.format("gfx: %d\nfps: %.2f", gc.getFPS(), fps), 1180, 976);
 	}
 	
@@ -114,7 +115,7 @@ public class GameField {
 		for (ICharacter enemy : enemies) enemy.update(gc, game, delta);
 		
 		// move bullets
-		Iterator<IBullet> i = playerBullets.iterator();
+		Iterator<IBullet> i = enemyBullets.iterator();
 		while (i.hasNext()) {
 			IBullet bullet = i.next();
 			bullet.update(gc, game, delta);
@@ -123,6 +124,8 @@ public class GameField {
 				i.remove();
 			} else if (checkCollisions && bullet.isColliding(character)) {
 				// handle player collision
+				System.out.println("got hit!");
+				i.remove();
 			}
 		}
 	}
