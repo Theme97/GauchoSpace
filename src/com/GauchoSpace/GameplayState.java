@@ -9,14 +9,14 @@ import org.newdawn.slick.state.StateBasedGame;
 public class GameplayState extends BasicGameState {
 	private int stateID;
 	private GameField field;
-	
-	public GameplayState(GauchoSpace.STATE state) throws SlickException {
+
+	public GameplayState(int state) throws SlickException {
 		super();
-		this.stateID = state.ordinal();
-		
+		this.stateID = state;
+
 		field = new GameField();
 	}
-	
+
 	@Override
 	public int getID() {
 		return stateID;

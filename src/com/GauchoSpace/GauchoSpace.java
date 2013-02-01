@@ -13,7 +13,11 @@ import org.newdawn.slick.state.StateBasedGame;
  *
  */
 public class GauchoSpace extends StateBasedGame {
-
+	public final static int MAIN_MENU = 1;
+	public final static int GAMEPLAY = 2;
+	public final static int OPTIONS_MENU = 3;
+	public final static int EXIT_STATE = 4;
+	/*
 	public static enum STATE {
 		MAIN_MENU,
 		OPTIONS_MENU,
@@ -21,7 +25,7 @@ public class GauchoSpace extends StateBasedGame {
 		EXIT_STATE,
 		NONE // used for the main menu
 	}
-	
+	*/
 	public GauchoSpace() {
 		super("Gaucho Space");
 	}
@@ -38,7 +42,7 @@ public class GauchoSpace extends StateBasedGame {
 	
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
-		//this.addState(new MainMenuState(STATE.MAIN_MENU));
-		this.addState(new GameplayState(STATE.GAMEPLAY));
+		this.addState(new MainMenuState(MAIN_MENU));
+		this.addState(new GameplayState(GAMEPLAY));
 	}
 }
