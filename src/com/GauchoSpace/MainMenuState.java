@@ -6,6 +6,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.Sound;
 
 
 public class MainMenuState extends BasicGameState {
@@ -19,8 +20,10 @@ public class MainMenuState extends BasicGameState {
 	private Image normalModeText;
 	private Image survivalModeText;
 	private Image backText;
+	private Sound selectFx;
 	private GauchoSpace.STATE selection;
 	private GauchoSpace.STATE optionSelected;
+	private GauchoSpace.STATE soundTracker = GauchoSpace.STATE.NONE;
 	
 	public MainMenuState(GauchoSpace.STATE state) {
 		stateID = state.ordinal();
@@ -42,6 +45,7 @@ public class MainMenuState extends BasicGameState {
 		survivalModeText = new Image("data/survivalmode.png");
 		backText = new Image("data/back.png");
 		selector = new Image("data/selector.png");
+		selectFx = new Sound("data/menuselect.wav");
 		// TODO Auto-generated method stub
 		
 	}
@@ -50,7 +54,9 @@ public class MainMenuState extends BasicGameState {
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2)
 			throws SlickException {
 		background.draw();
+		// changes alpha value of selector
 		selector.setAlpha((float) .5);
+		// draws buttons
 		if(gameModeSelection == 0){
 			playText.draw(50, 495);
 			statsText.draw(50, 585);
@@ -61,6 +67,7 @@ public class MainMenuState extends BasicGameState {
 			survivalModeText.draw(50, 585);
 			backText.draw(50,675);
 		}
+		// draws selector
 		if (selection == GauchoSpace.STATE.GAMEPLAY) {
 			selector.draw(50, 495);
 		} else if (selection == GauchoSpace.STATE.OPTIONS_MENU) {
@@ -81,6 +88,7 @@ public class MainMenuState extends BasicGameState {
 	@Override
 	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
+		// boundary box for buttons
 		if (newx > 50 && newx < 550) {
 			if (newy > 495 && newy < 580) {
 				selection = GauchoSpace.STATE.GAMEPLAY;
@@ -96,6 +104,7 @@ public class MainMenuState extends BasicGameState {
 		else {
 			selection = GauchoSpace.STATE.NONE;
 		}
+		selectSoundTracker(selection);
 		
 	}
 
@@ -132,4 +141,16 @@ public class MainMenuState extends BasicGameState {
 		selection = GauchoSpace.STATE.NONE;
 		optionSelected = selection;
 	}
+	
+	// plays sound effect when mouse hovers over a button only once
+	public void selectSoundTracker(GauchoSpace.STATE arg0){
+		if(arg0 != soundTracker){
+			if (arg0 != GauchoSpace.STATE.NONE) {
+				selectFx.play();
+			}
+			soundTracker = arg0;
+		}
+	}
+		
 }
+
