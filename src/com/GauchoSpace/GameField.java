@@ -29,7 +29,7 @@ public class GameField {
 	private int width;
 	private int height;
 	private float fps;
-	private float row = 0;
+	private float yDisplacement;
 	
 	public GameField() throws SlickException {
 		levelManager = new LevelManager(this);
@@ -46,6 +46,7 @@ public class GameField {
 		width = 858;
 		height = 1000;
 		fps = 0.0f;
+		yDisplacement = 0;
 	}
 	
 	public ICharacter getPlayer() {
@@ -73,10 +74,11 @@ public class GameField {
 		
 		// draw field background
 		//fieldBackground.draw();
-		graphics.drawImage(fieldBackground, -550, row);
-		//row = row + .25f;
-		graphics.drawImage(fieldBackground, -550, row - fieldBackground.getHeight());
-		if (row == fieldBackground.getHeight()) row = 0;
+		
+		// draw animated background
+		graphics.drawImage(fieldBackground, -550, yDisplacement);
+		graphics.drawImage(fieldBackground, -550, yDisplacement - fieldBackground.getHeight());
+		if (yDisplacement == fieldBackground.getHeight()) yDisplacement = 0;
 		
 		// render order: enemies, boss, player, player bullets, enemy bullets
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
@@ -110,7 +112,7 @@ public class GameField {
 		boolean pauseToggle = gc.getInput().isKeyPressed(Input.KEY_ESCAPE);
 		if (pauseToggle) paused = !paused;
 		// turns on moving background if not paused
-		if (!paused) row = row + .25f;
+		if (!paused) yDisplacement = yDisplacement + .25f;
 		if (paused) return;
 		
 		// update level
