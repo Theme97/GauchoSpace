@@ -7,6 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.Music;
 
 
 public class MainMenuState extends BasicGameState {
@@ -21,6 +22,7 @@ public class MainMenuState extends BasicGameState {
 	private Image survivalModeText;
 	private Image backText;
 	private Sound selectFx;
+	private Music backgroundMusic;
 	private int selection;
 	private int optionSelected;
 	private int soundTracker = -1;
@@ -46,6 +48,8 @@ public class MainMenuState extends BasicGameState {
 		backText = new Image("data/back.png");
 		selector = new Image("data/selector.png");
 		selectFx = new Sound("data/menuselect.wav");
+		backgroundMusic = new Music("data/Intersektion.wav");
+		backgroundMusic.loop();
 		// TODO Auto-generated method stub
 		
 	}
@@ -117,6 +121,7 @@ public class MainMenuState extends BasicGameState {
 				// otherwise enters gameplay mode
 				if (gameModeSelection == 1) {
 					game.enterState(GauchoSpace.GAMEPLAY);
+					backgroundMusic.release();
 				}
 				gameModeSelection = 1;
 				optionSelected = -1;
