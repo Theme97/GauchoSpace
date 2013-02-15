@@ -22,10 +22,11 @@ public class MainMenuState extends BasicGameState {
 	private Image survivalModeText;
 	private Image backText;
 	private Sound selectFx;
+	private Sound menuEnterFx;
 	private Music backgroundMusic;
 	private int selection;
 	private int optionSelected;
-	private int soundTracker = -1;
+	private int soundTracker;
 	
 	public MainMenuState(int state) {
 		stateID = state;
@@ -48,8 +49,10 @@ public class MainMenuState extends BasicGameState {
 		backText = new Image("data/back.png");
 		selector = new Image("data/selector.png");
 		selectFx = new Sound("data/menuselect.wav");
+		menuEnterFx = new Sound("data/menuEnter.wav");
 		backgroundMusic = new Music("data/Intersektion.wav");
 		backgroundMusic.loop();
+		soundTracker = -1;
 		// TODO Auto-generated method stub
 		
 	}
@@ -86,6 +89,7 @@ public class MainMenuState extends BasicGameState {
 	@Override
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		super.mouseClicked(button, x, y, clickCount);
+		if (optionSelected != selection) menuEnterFx.play(1, .4f);
 		optionSelected = selection;
 	}	
 	
@@ -151,7 +155,7 @@ public class MainMenuState extends BasicGameState {
 	public void selectSoundTracker(int arg0){
 		if(arg0 != soundTracker){
 			if (arg0 != -1) {
-				selectFx.play();
+				selectFx.play(1, .2f);
 			}
 			soundTracker = arg0;
 		}
