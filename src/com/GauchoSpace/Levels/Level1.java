@@ -93,7 +93,7 @@ public class Level1 implements ILevel {
 			try {
 				Enemy enemy = new TestBoss(field, new Image("res/enemy_test.png"), 20, 200);
 				enemy.setMotion(new Lerp(429, -20, 429, 300, 120));
-				field.addEnemy(enemy);
+				field.setBoss(enemy);
 			} catch (SlickException e) {
 				e.printStackTrace(); // TODO
 			}
@@ -183,9 +183,9 @@ class TestBoss extends Enemy {
 		int ticks = totalTicks - startTime;
 		if (ticks > -1) {
 			Vector2f pos = getPos();
-			field.addEnemyBullet(new AcceleratedBullet(field, pos.x, pos.y, 5, -0.2f, ticks * 3 +   0, 6, 5, Color.red));
-			field.addEnemyBullet(new AcceleratedBullet(field, pos.x, pos.y, 5, -0.2f, ticks * 3 +  91, 6, 5, Color.green));
-			field.addEnemyBullet(new AcceleratedBullet(field, pos.x, pos.y, 5, -0.2f, ticks * 3 + 182, 6, 5, Color.blue));
+			field.addEnemyBullet(new AcceleratedBullet(field, pos.x, pos.y, 8, -0.1f, ticks * 3 +   0, 10, 5, Color.red));
+			field.addEnemyBullet(new AcceleratedBullet(field, pos.x, pos.y, 8, -0.1f, ticks * 3 +  91, 10, 5, Color.green));
+			field.addEnemyBullet(new AcceleratedBullet(field, pos.x, pos.y, 8, -0.1f, ticks * 3 + 182, 10, 5, Color.blue));
 		}
 	}
 }

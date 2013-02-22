@@ -32,6 +32,8 @@ public class GameField {
 	private float yDisplacement;
 	private float timer;
 	
+	private boolean cheatInvincibility;
+	
 	public GameField() throws SlickException {
 		levelManager = new LevelManager(this);
 		character = new TestPlayer(this);
@@ -104,14 +106,15 @@ public class GameField {
 		graphics.clearWorldClip();
 		
 		// draw UI
+		graphics.setColor(Color.white);
+		graphics.drawString("Score: 0", 900, 10);
+		graphics.drawString("Timer: " + (int)Math.floor(timer / 1000), 900, 30);
+		graphics.drawString("Lives: " + lives, 900, 50);
 		
-		// timer
-		graphics.drawString("Timer: " + timer/1000, 900, 30);
-		// scoring
-		graphics.drawString("Score: ", 900, 10);
+		// cheats
+		if (cheatInvincibility) graphics.drawString("Invincibility ON", 900, 500);
 		
 		// ghetto debug/FPS counters
-		graphics.setColor(Color.white);
 		graphics.drawString("blt: " + enemyBullets.size() + "\n   : " + playerBullets.size(), 1080, 976);
 		graphics.drawString(String.format("gfx: %d\nfps: %.2f", gc.getFPS(), fps), 1180, 976);
 	}
@@ -119,7 +122,10 @@ public class GameField {
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		// moving avg for FPS
 		fps = (1000f / delta) * 0.2f + fps * 0.8f;
-				
+		
+		// cheats
+		if (gc.getInput().isKeyPressed(Input.KEY_I)) cheatInvincibility = !cheatInvincibility; 
+		
 		// pause check
 		boolean pauseToggle = gc.getInput().isKeyPressed(Input.KEY_ESCAPE);
 		if (pauseToggle) paused = !paused;
@@ -135,7 +141,7 @@ public class GameField {
 		
 		// move character
 		character.update(gc, game, delta);
-		boolean checkCollisions = !character.getInvincibility();
+		boolean checkCollisions = !cheatInvincibility && !character.getInvincibility();
 		
 		// move enemies
 		if (boss != null) boss.update(gc, game, delta);
@@ -151,7 +157,7 @@ public class GameField {
 			IBullet bullet = i.next();
 			bullet.update(gc, game, delta);
 			
-			// check collision
+			// first, general enemies
 			j = enemies.iterator();
 			while (j.hasNext()) {
 				ICharacter enemy = j.next();
@@ -162,6 +168,18 @@ public class GameField {
 			
 			if (bullet.isDeletable()) {
 				i.remove();
+				continue;
+			}
+			
+			// next, boss
+			if (boss != null) {
+				if (bullet.isColliding(boss)) {
+					boss.tookDamage(bullet.getDamage());
+					if (boss.isDeletable()) {
+						game.enterState(GauchoSpace.GAMEOVER);
+						return;
+					}
+				}
 			}
 		}
 		
@@ -178,6 +196,7 @@ public class GameField {
 				lives--;
 				if (lives <= 0) {
 					game.enterState(GauchoSpace.GAMEOVER);
+					return;
 				} else {
 					character.tookDamage(bullet.getDamage());
 					i.remove();
@@ -193,6 +212,10 @@ public class GameField {
 	
 	public void addEnemy(ICharacter enemy) {
 		enemies.add(enemy);
+	}
+	
+	public void setBoss(ICharacter boss) {
+		this.boss = boss;
 	}
 	
 	public void addPlayerBullet(IBullet bullet) {
