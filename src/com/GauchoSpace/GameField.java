@@ -59,6 +59,10 @@ public class GameField {
 		return height;
 	}
 	
+	public int getTicks() {
+		return levelManager.getTicks();
+	}
+	
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
 		// scale resolution
 		//graphics.scale(0.5f, 0.5f);
@@ -146,6 +150,10 @@ public class GameField {
 				i.remove();
 			}
 		}
+	}
+	
+	public void addEnemy(ICharacter enemy) {
+		enemies.add(enemy);
 	}
 	
 	public void addPlayerBullet(IBullet bullet) {
