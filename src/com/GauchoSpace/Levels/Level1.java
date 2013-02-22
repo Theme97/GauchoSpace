@@ -1,7 +1,9 @@
 package com.GauchoSpace.Levels;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.Music;
 
 import com.GauchoSpace.GameField;
 import com.GauchoSpace.IBullet;
@@ -10,8 +12,20 @@ import com.GauchoSpace.LevelManager;
 import com.GauchoSpace.Bullets.*;
 
 public class Level1 implements ILevel {
+	private Music backgroundMusic;
+	
 	@Override
 	public void update(GameField field, LevelManager manager, int ticks) {
+		// plays background music
+		if (ticks == 0){
+			try {
+				backgroundMusic = new Music("data/Intersektion.ogg");
+				backgroundMusic.loop();
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		int x = field.getWidth() / 2;
 		field.addEnemyBullet(new LinearBullet(field, x, 100, 5, ticks * 3, 5, Color.red));
 		field.addEnemyBullet(new LinearBullet(field, x, 100, 5, ticks * 3 + 91, 5, Color.green));
