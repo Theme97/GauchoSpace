@@ -40,17 +40,17 @@ public class MainMenuState extends BasicGameState {
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
 			throws SlickException {
-		background = new Image("data/mainmenu.png");
-		playText = new Image("data/play.png");
-		statsText = new Image("data/stats.png");
-		quitText = new Image("data/quit.png");
-		normalModeText = new Image("data/normalmode.png");
-		survivalModeText = new Image("data/survivalmode.png");
-		backText = new Image("data/back.png");
-		selector = new Image("data/selector.png");
-		selectFx = new Sound("data/menuselect.wav");
-		menuEnterFx = new Sound("data/menuEnter.wav");
-		backgroundMusic = new Music("data/Undercover.ogg");
+		background = new Image("res/mainmenu.png");
+		playText = new Image("res/play.png");
+		statsText = new Image("res/stats.png");
+		quitText = new Image("res/quit.png");
+		normalModeText = new Image("res/normalmode.png");
+		survivalModeText = new Image("res/survivalmode.png");
+		backText = new Image("res/back.png");
+		selector = new Image("res/selector.png");
+		selectFx = new Sound("res/menuselect.wav");
+		menuEnterFx = new Sound("res/menuEnter.wav");
+		backgroundMusic = new Music("res/Undercover.ogg");
 		backgroundMusic.loop();
 		soundTracker = -1;
 		// TODO Auto-generated method stub

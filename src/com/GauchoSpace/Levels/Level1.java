@@ -19,7 +19,7 @@ public class Level1 implements ILevel {
 		// plays background music
 		if (ticks == 0){
 			try {
-				backgroundMusic = new Music("data/Intersektion.ogg");
+				backgroundMusic = new Music("res/Intersektion.ogg");
 				backgroundMusic.loop();
 			} catch (SlickException e) {
 				e.printStackTrace();
