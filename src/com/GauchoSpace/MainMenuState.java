@@ -7,6 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.Music;
 
 
 public class MainMenuState extends BasicGameState {
@@ -21,9 +22,11 @@ public class MainMenuState extends BasicGameState {
 	private Image survivalModeText;
 	private Image backText;
 	private Sound selectFx;
+	private Sound menuEnterFx;
+	private Music backgroundMusic;
 	private int selection;
 	private int optionSelected;
-	private int soundTracker = -1;
+	private int soundTracker;
 	
 	public MainMenuState(int state) {
 		stateID = state;
@@ -37,15 +40,19 @@ public class MainMenuState extends BasicGameState {
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1)
 			throws SlickException {
-		background = new Image("data/mainmenu.png");
-		playText = new Image("data/play.png");
-		statsText = new Image("data/stats.png");
-		quitText = new Image("data/quit.png");
-		normalModeText = new Image("data/normalmode.png");
-		survivalModeText = new Image("data/survivalmode.png");
-		backText = new Image("data/back.png");
-		selector = new Image("data/selector.png");
-		selectFx = new Sound("data/menuselect.wav");
+		background = new Image("res/mainmenu.png");
+		playText = new Image("res/play.png");
+		statsText = new Image("res/stats.png");
+		quitText = new Image("res/quit.png");
+		normalModeText = new Image("res/normalmode.png");
+		survivalModeText = new Image("res/survivalmode.png");
+		backText = new Image("res/back.png");
+		selector = new Image("res/selector.png");
+		selectFx = new Sound("res/menuselect.wav");
+		menuEnterFx = new Sound("res/menuEnter.wav");
+		backgroundMusic = new Music("res/Undercover.ogg");
+		backgroundMusic.loop();
+		soundTracker = -1;
 		// TODO Auto-generated method stub
 		
 	}
@@ -82,6 +89,7 @@ public class MainMenuState extends BasicGameState {
 	@Override
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		super.mouseClicked(button, x, y, clickCount);
+		if (optionSelected != selection) menuEnterFx.play(1, .4f);
 		optionSelected = selection;
 	}	
 	
@@ -117,6 +125,7 @@ public class MainMenuState extends BasicGameState {
 				// otherwise enters gameplay mode
 				if (gameModeSelection == 1) {
 					game.enterState(GauchoSpace.GAMEPLAY);
+					backgroundMusic.release();
 				}
 				gameModeSelection = 1;
 				optionSelected = -1;
@@ -146,7 +155,7 @@ public class MainMenuState extends BasicGameState {
 	public void selectSoundTracker(int arg0){
 		if(arg0 != soundTracker){
 			if (arg0 != -1) {
-				selectFx.play();
+				selectFx.play(1, .2f);
 			}
 			soundTracker = arg0;
 		}

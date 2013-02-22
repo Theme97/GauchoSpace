@@ -6,6 +6,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.Music;
 
 import com.GauchoSpace.Enemy;
 import com.GauchoSpace.GameField;
@@ -19,11 +20,23 @@ import com.GauchoSpace.Motion.CatmullRom;
 import com.GauchoSpace.Motion.Lerp;
 
 public class Level1 implements ILevel {
+	private Music backgroundMusic;
+	
 	@Override
 	public void update(GameField field, LevelManager manager, int ticks) {
 		// set up player
 		if (ticks == 0) {
 			field.getPlayer().setPos(new Vector2f(field.getWidth() / 2, field.getHeight() - 50));
+		}
+		
+		// plays background music
+		if (ticks == 0){
+			try {
+				backgroundMusic = new Music("res/Intersektion.ogg");
+				backgroundMusic.loop();
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		// first wave

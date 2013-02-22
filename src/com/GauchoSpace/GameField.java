@@ -29,6 +29,8 @@ public class GameField {
 	private int width;
 	private int height;
 	private float fps;
+	private float yDisplacement;
+	private float timer;
 	
 	public GameField() throws SlickException {
 		levelManager = new LevelManager(this);
@@ -45,6 +47,8 @@ public class GameField {
 		width = 858;
 		height = 1000;
 		fps = 0.0f;
+		yDisplacement = 0;
+		timer = 0.0f;
 	}
 	
 	public ICharacter getPlayer() {
@@ -75,7 +79,12 @@ public class GameField {
 		graphics.setWorldClip(0, 0, width, height);
 		
 		// draw field background
-		fieldBackground.draw();
+		//fieldBackground.draw();
+		
+		// draw animated background
+		graphics.drawImage(fieldBackground, -550, yDisplacement);
+		graphics.drawImage(fieldBackground, -550, yDisplacement - fieldBackground.getHeight());
+		if (yDisplacement >= fieldBackground.getHeight()) yDisplacement = 0;
 		
 		// render order: enemies, boss, player, player bullets, enemy bullets
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
@@ -96,6 +105,11 @@ public class GameField {
 		
 		// draw UI
 		
+		// timer
+		graphics.drawString("Timer: " + timer/1000, 900, 30);
+		// scoring
+		graphics.drawString("Score: ", 900, 10);
+		
 		// ghetto debug/FPS counters
 		graphics.setColor(Color.white);
 		graphics.drawString("blt: " + enemyBullets.size() + "\n   : " + playerBullets.size(), 1080, 976);
@@ -105,11 +119,16 @@ public class GameField {
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		// moving avg for FPS
 		fps = (1000f / delta) * 0.2f + fps * 0.8f;
-		
+				
 		// pause check
 		boolean pauseToggle = gc.getInput().isKeyPressed(Input.KEY_ESCAPE);
 		if (pauseToggle) paused = !paused;
+		
 		if (paused) return;
+		
+		// updates background and timer
+		yDisplacement = yDisplacement + 1f;
+		timer += delta;
 		
 		// update level
 		levelManager.update(gc, game, delta);
