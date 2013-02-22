@@ -14,6 +14,7 @@ public class Enemy implements ICharacter {
 	private int radius;
 	private int health;
 	private boolean invincible;
+	private boolean deletable;
 	
 	private UpdateHandler updateHandler;
 	private RenderHandler renderHandler;
@@ -25,12 +26,20 @@ public class Enemy implements ICharacter {
 		this.health = health;
 	}
 	
+	public IMotion getMotion() {
+		return motion;
+	}
+	
 	public void setMotion(IMotion motion) {
 		this.motion = motion;
 	}
 	
 	public void setInvincibility(boolean invincible) {
 		this.invincible = invincible;
+	}
+	
+	public void setDeletable(boolean deletable) {
+		this.deletable = deletable;
 	}
 	
 	public void setUpdateHandler(UpdateHandler handler) {
@@ -68,7 +77,7 @@ public class Enemy implements ICharacter {
 	
 	@Override
 	public void tookDamage(int damage) {
-		this.health -= damage;
+		health -= damage;
 	}
 	
 	@Override
@@ -99,5 +108,10 @@ public class Enemy implements ICharacter {
 		
 		// call update handler
 		if (updateHandler != null) updateHandler.onUpdate(field, field.getTicks());
+	}
+
+	@Override
+	public boolean isDeletable() {
+		return health <= 0;
 	}
 }

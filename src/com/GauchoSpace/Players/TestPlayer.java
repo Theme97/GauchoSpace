@@ -156,6 +156,11 @@ public class TestPlayer implements ICharacter {
 		pos.x = Math.min(Math.max(pos.x, 12), field.getWidth() - 12);
 		pos.y = Math.min(Math.max(pos.y, 20), field.getHeight() - 20);
 	}
+
+	@Override
+	public boolean isDeletable() {
+		return false;
+	}
 }
 
 class PlayerBullet1 implements IBullet {
@@ -172,6 +177,7 @@ class PlayerBullet1 implements IBullet {
 		this.pos = new Vector2f(x, y);
 		this.speed = speed;
 		this.width = width;
+		this.damage = damage;
 		this.color = color;
 	}
 	
@@ -187,8 +193,10 @@ class PlayerBullet1 implements IBullet {
 
 	@Override
 	public boolean isColliding(ICharacter character) {
-		// TODO Auto-generated method stub
-		return false;
+		float totalRadius = width + character.getRadius();
+		boolean colliding = character.getPos().distanceSquared(pos) <= totalRadius * totalRadius;
+		if (colliding) deletable = true;
+		return colliding;
 	}
 
 	@Override

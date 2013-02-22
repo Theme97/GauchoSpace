@@ -16,6 +16,8 @@ public interface ICharacter {
 	
 	public void tookDamage(int damage);
 	
+	public boolean isDeletable();
+	
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics);
 	public void update(GameContainer gc, StateBasedGame game, int delta);
 }

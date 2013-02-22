@@ -143,12 +143,22 @@ public class GameField {
 		
 		// move bullets
 		Iterator<IBullet> i;
+		Iterator<ICharacter> j;
 		
 		// - 1: player bullets
 		i = playerBullets.iterator();
 		while (i.hasNext()) {
 			IBullet bullet = i.next();
 			bullet.update(gc, game, delta);
+			
+			// check collision
+			j = enemies.iterator();
+			while (j.hasNext()) {
+				ICharacter enemy = j.next();
+				if (bullet.isColliding(enemy)) {
+					enemy.tookDamage(bullet.getDamage());
+				}
+			}
 			
 			if (bullet.isDeletable()) {
 				i.remove();
@@ -174,6 +184,11 @@ public class GameField {
 				}
 			}
 		}
+		
+		// clean up enemies
+		for (j = enemies.iterator(); j.hasNext();)
+			if (j.next().isDeletable())
+				j.remove();
 	}
 	
 	public void addEnemy(ICharacter enemy) {
