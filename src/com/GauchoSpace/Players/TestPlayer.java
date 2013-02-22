@@ -1,5 +1,8 @@
 package com.GauchoSpace.Players;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -27,6 +30,9 @@ public class TestPlayer implements ICharacter {
 	private int speed_slow;
 	
 	private int ticksToNextShot;
+	
+	private Vector2f deathPosition;
+	private int ticksToRevival;
 	
 	public TestPlayer(GameField field) throws SlickException {
 		this.field = field;
@@ -66,11 +72,20 @@ public class TestPlayer implements ICharacter {
 	
 	@Override
 	public void tookDamage(int damage) {
-		// die
+		deathPosition = pos.copy();
+		ticksToRevival = 360;
+		invincible = true;
 	}
 	
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
+		if (ticksToRevival > 240) {
+			int radius = (360 - ticksToRevival) * 10;
+			graphics.setColor(Color.white);
+			graphics.drawArc(deathPosition.x - radius, deathPosition.y - radius, radius * 2, radius * 2, 0, 360);
+			return;
+		}
+		
 		int x = (int)pos.x;
 		int y = (int)pos.y;
 		
@@ -87,6 +102,28 @@ public class TestPlayer implements ICharacter {
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
+		// handle death
+		if (ticksToRevival > 0) {
+			ticksToRevival--;
+			
+			if (ticksToRevival > 240) {
+				int radius = (360 - ticksToRevival) * 10;
+				Iterator<IBullet> i = field.getEnemyBullets().iterator();
+				while (i.hasNext()) {
+					IBullet bullet = i.next();
+					if (deathPosition.distanceSquared(bullet.getPos()) <= radius*radius) {
+						i.remove();
+					}
+				}
+				return;
+			} else if (ticksToRevival > 180) {
+				pos = new Vector2f(field.getWidth() / 2, field.getHeight() - (240 - ticksToRevival) * 3);
+				return;
+			} else if (ticksToRevival == 0) {
+				invincible = false;
+			}
+		}
+		
 		// check keys
 		Input input = gc.getInput();
 		
@@ -164,5 +201,10 @@ class PlayerBullet1 implements IBullet {
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		pos.add(new Vector2f(0, -speed));
 		if (pos.y + width * 5 < 0) deletable = true;
+	}
+
+	@Override
+	public Vector2f getPos() {
+		return pos.copy();
 	}
 }

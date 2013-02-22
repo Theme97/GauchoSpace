@@ -96,4 +96,9 @@ public class AcceleratedBullet implements IBullet {
 			deletable = true;
 		}
 	}
+
+	@Override
+	public Vector2f getPos() {
+		return pos.copy();
+	}
 }

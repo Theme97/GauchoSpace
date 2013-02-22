@@ -146,8 +146,13 @@ public class GameField {
 				i.remove();
 			} else if (checkCollisions && bullet.isColliding(character)) {
 				// handle player collision
-				System.out.println("got hit!");
-				i.remove();
+				lives--;
+				if (lives <= 0) {
+					game.enterState(GauchoSpace.GAMEOVER);
+				} else {
+					character.tookDamage(bullet.getDamage());
+					i.remove();
+				}
 			}
 		}
 	}

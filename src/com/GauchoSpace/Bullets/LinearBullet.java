@@ -83,4 +83,9 @@ public class LinearBullet implements IBullet {
 			deletable = true;
 		}
 	}
+
+	@Override
+	public Vector2f getPos() {
+		return pos.copy();
+	}
 }
