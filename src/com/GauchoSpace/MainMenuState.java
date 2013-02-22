@@ -50,7 +50,7 @@ public class MainMenuState extends BasicGameState {
 		selector = new Image("data/selector.png");
 		selectFx = new Sound("data/menuselect.wav");
 		menuEnterFx = new Sound("data/menuEnter.wav");
-		backgroundMusic = new Music("data/Intersektion.wav");
+		backgroundMusic = new Music("data/Undercover.ogg");
 		backgroundMusic.loop();
 		soundTracker = -1;
 		// TODO Auto-generated method stub
