@@ -62,7 +62,7 @@ public class MainMenuState extends BasicGameState {
 			throws SlickException {
 		background.draw();
 		// changes alpha value of selector
-		selector.setAlpha((float) .5);
+		selector.setAlpha(.5f);
 		// draws buttons
 		if(gameModeSelection == 0){
 			playText.draw(50, 495);
@@ -147,6 +147,7 @@ public class MainMenuState extends BasicGameState {
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+		backgroundMusic.loop();
 		selection = -1;
 		optionSelected = selection;
 	}
