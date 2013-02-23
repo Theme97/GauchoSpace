@@ -177,6 +177,7 @@ public class GameField {
 					boss.tookDamage(bullet.getDamage());
 					if (boss.isDeletable()) {
 						game.enterState(GauchoSpace.GAMEOVER);
+						reset();
 						return;
 					}
 				}
@@ -196,6 +197,7 @@ public class GameField {
 				lives--;
 				if (lives <= 0) {
 					game.enterState(GauchoSpace.GAMEOVER);
+					reset();
 					return;
 				} else {
 					character.tookDamage(bullet.getDamage());
@@ -232,5 +234,21 @@ public class GameField {
 	
 	public Collection<IBullet> getEnemyBullets() {
 		return enemyBullets;
+	}
+	
+	// Resets the gamefield
+	public void reset(){
+		boss = null;
+		enemies = new Vector<ICharacter>();
+		playerBullets = new Vector<IBullet>();
+		enemyBullets = new Vector<IBullet>();
+		lives = 3;
+		paused = false;
+		lives = 3;
+		score = 0;
+		fps = 0.0f;
+		yDisplacement = 0;
+		timer = 0.0f;
+		levelManager.reset();
 	}
 }
