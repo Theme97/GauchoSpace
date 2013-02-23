@@ -29,9 +29,4 @@ public class LevelManager {
 	public int getTicks() {
 		return ticks;
 	}
-	
-	// resets the level
-	public void reset(){
-		ticks = 0;
-	}
 }
