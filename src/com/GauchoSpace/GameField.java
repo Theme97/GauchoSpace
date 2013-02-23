@@ -23,7 +23,9 @@ public class GameField {
 	private Collection<IBullet> enemyBullets;
 	private Image uiBackground;
 	private Image fieldBackground;
+	private Image continueButton;
 	private boolean paused;
+	private int continued;
 	private int lives;
 	private int score;
 	private int width;
@@ -43,6 +45,7 @@ public class GameField {
 		enemyBullets = new Vector<IBullet>();
 		uiBackground = new Image("res/background_ui.png");
 		fieldBackground = new Image("res/background_field.jpg");
+		continueButton = new Image("res/continue.png");
 		paused = false;
 		lives = 3;
 		score = 0;
@@ -51,6 +54,7 @@ public class GameField {
 		fps = 0.0f;
 		yDisplacement = 0;
 		timer = 0.0f;
+		continued = -1;
 	}
 	
 	public ICharacter getPlayer() {
@@ -101,13 +105,20 @@ public class GameField {
 			graphics.fillRect(0, 0, width, height);
 		}
 		
+		// continue? screen
+		if (lives <= 0) {
+			graphics.setColor(new Color(0, 0, 0, 192));
+			graphics.fillRect(0, 0, width, height);
+			continueButton.draw(200, 400);
+		}
+		
 		// reset transformations and clips
 		graphics.resetTransform();
 		graphics.clearWorldClip();
 		
 		// draw UI
 		graphics.setColor(Color.white);
-		graphics.drawString("Score: 0", 900, 10);
+		graphics.drawString("Score: " + score, 900, 10);
 		graphics.drawString("Timer: " + (int)Math.floor(timer / 1000), 900, 30);
 		graphics.drawString("Lives: " + lives, 900, 50);
 		
@@ -118,13 +129,28 @@ public class GameField {
 		graphics.drawString("blt: " + enemyBullets.size() + "\n   : " + playerBullets.size(), 1080, 976);
 		graphics.drawString(String.format("gfx: %d\nfps: %.2f", gc.getFPS(), fps), 1180, 976);
 	}
-	
+
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		// moving avg for FPS
 		fps = (1000f / delta) * 0.2f + fps * 0.8f;
 		
 		// cheats
 		if (gc.getInput().isKeyPressed(Input.KEY_I)) cheatInvincibility = !cheatInvincibility; 
+		
+		// continue screen check
+		if (lives <= 0) {
+			if (continued == GameplayState.CONTINUED){
+				lives = 3;
+				score++;
+				continued = -1;
+			}
+			else if (continued == GameplayState.QUIT){
+				game.enterState(GauchoSpace.GAMEOVER);
+				reset();
+				continued = -1;
+			}
+			return;
+		}
 		
 		// pause check
 		boolean pauseToggle = gc.getInput().isKeyPressed(Input.KEY_ESCAPE);
@@ -195,14 +221,20 @@ public class GameField {
 			} else if (checkCollisions && bullet.isColliding(character)) {
 				// handle player collision
 				lives--;
-				if (lives <= 0) {
-					game.enterState(GauchoSpace.GAMEOVER);
-					reset();
+				/*if (lives <= 0) {
+					if (continued == GameplayState.CONTINUED){
+						lives = 3;
+						score++;
+					}
+					else if (continued == GameplayState.QUIT){
+						game.enterState(GauchoSpace.GAMEOVER);
+						reset();
+					}
 					return;
-				} else {
+				} else {*/
 					character.tookDamage(bullet.getDamage());
 					i.remove();
-				}
+				// }
 			}
 		}
 		
@@ -236,6 +268,18 @@ public class GameField {
 		return enemyBullets;
 	}
 	
+	public int returnContinued(){
+		return continued;
+	}
+	
+	public int returnLives(){
+		return lives;
+	}
+	
+	public void changeContinued(int value){
+		continued = value;
+	}
+	
 	// Resets the gamefield
 	public void reset(){
 		boss = null;
@@ -249,6 +293,7 @@ public class GameField {
 		fps = 0.0f;
 		yDisplacement = 0;
 		timer = 0.0f;
+		continued = -1;
 		levelManager.reset();
 	}
 }
