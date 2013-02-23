@@ -220,21 +220,17 @@ public class GameField {
 				i.remove();
 			} else if (checkCollisions && bullet.isColliding(character)) {
 				// handle player collision
-				lives--;
+				if (lives > 0) lives --;
+				character.tookDamage(bullet.getDamage());
+				i.remove();
 				/*if (lives <= 0) {
-					if (continued == GameplayState.CONTINUED){
-						lives = 3;
-						score++;
-					}
-					else if (continued == GameplayState.QUIT){
-						game.enterState(GauchoSpace.GAMEOVER);
-						reset();
-					}
+					game.enterState(GauchoSpace.GAMEOVER);
+					reset();
 					return;
-				} else {*/
+				} else {
 					character.tookDamage(bullet.getDamage());
 					i.remove();
-				// }
+				 }*/
 			}
 		}
 		
@@ -290,10 +286,14 @@ public class GameField {
 		paused = false;
 		lives = 3;
 		score = 0;
-		fps = 0.0f;
 		yDisplacement = 0;
 		timer = 0.0f;
 		continued = -1;
-		levelManager.reset();
+		try {
+			character = new TestPlayer(this);
+			levelManager = new LevelManager(this);
+		} catch (SlickException e) {
+			e.printStackTrace(); // TODO
+		}
 	}
 }
