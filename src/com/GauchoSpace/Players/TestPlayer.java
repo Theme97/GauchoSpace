@@ -106,6 +106,10 @@ public class TestPlayer implements ICharacter {
 		if (ticksToRevival > 0) {
 			ticksToRevival--;
 			
+			if (ticksToRevival > 0){
+				if ((ticksToRevival % 8) > 4) sprite.setAlpha(.4f);
+				else sprite.setAlpha(1f);
+			}
 			if (ticksToRevival > 240) {
 				int radius = (360 - ticksToRevival) * 10;
 				Iterator<IBullet> i = field.getEnemyBullets().iterator();
