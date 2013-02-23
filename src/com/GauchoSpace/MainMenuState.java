@@ -125,7 +125,7 @@ public class MainMenuState extends BasicGameState {
 				// otherwise enters gameplay mode
 				if (gameModeSelection == 1) {
 					game.enterState(GauchoSpace.GAMEPLAY);
-					backgroundMusic.release();
+					backgroundMusic.stop();
 				}
 				gameModeSelection = 1;
 				optionSelected = -1;
@@ -160,6 +160,5 @@ public class MainMenuState extends BasicGameState {
 			soundTracker = arg0;
 		}
 	}
-		
 }
 

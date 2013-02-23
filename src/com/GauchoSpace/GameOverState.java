@@ -8,10 +8,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.Music;
 
 
 public class GameOverState extends BasicGameState {
 	int stateID = 0;
+	private Music mainMenuMusic;
 	
 	public GameOverState(int state) {
 		stateID = state;
@@ -36,6 +38,8 @@ public class GameOverState extends BasicGameState {
 	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
 		Input input = gc.getInput();
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+			mainMenuMusic = new Music("res/Undercover.ogg");
+			mainMenuMusic.loop();
 			game.enterState(GauchoSpace.MAIN_MENU);
 		}
 	}
