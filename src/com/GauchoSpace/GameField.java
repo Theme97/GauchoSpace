@@ -1,5 +1,12 @@
 package com.GauchoSpace;
 
+import com.GauchoSpace.ScoreRecord;
+import com.GauchoSpace.ScoreTableLoader;
+
+import java.awt.Font;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -11,7 +18,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
+import org.newdawn.slick.TrueTypeFont;
 import com.GauchoSpace.Players.*;
 
 public class GameField {
@@ -28,12 +35,14 @@ public class GameField {
 	private int continued;
 	private int lives;
 	private int score;
+	private int hiScore;
 	private int width;
 	private int height;
 	private float fps;
 	private float yDisplacement;
 	private float timer;
-	
+	private Font font;
+	private TrueTypeFont ttf;
 	private boolean cheatInvincibility;
 	
 	public GameField() throws SlickException {
@@ -55,6 +64,9 @@ public class GameField {
 		yDisplacement = 0;
 		timer = 0.0f;
 		continued = -1;
+		font = new Font("Verdana", Font.BOLD, 30);
+		ttf = new TrueTypeFont(font, true);
+		hiScore = getHiScore();
 	}
 	
 	public ICharacter getPlayer() {
@@ -118,9 +130,11 @@ public class GameField {
 		
 		// draw UI
 		graphics.setColor(Color.white);
-		graphics.drawString("Score: " + score, 900, 10);
-		graphics.drawString("Timer: " + (int)Math.floor(timer / 1000), 900, 30);
-		graphics.drawString("Lives: " + lives, 900, 50);
+		if (hiScore >= score)	ttf.drawString(1125, 142, "" + hiScore); 
+		else	ttf.drawString(1125, 142, "" + score);
+		ttf.drawString(1078, 192, "" + score);
+		//ttf.drawString(1065, 192, "" + (int)Math.floor(timer / 1000));
+		ttf.drawString(1055, 292, "" + lives);
 		
 		// cheats
 		if (cheatInvincibility) graphics.drawString("Invincibility ON", 900, 500);
@@ -146,6 +160,7 @@ public class GameField {
 			}
 			else if (continued == GameplayState.QUIT){
 				game.enterState(GauchoSpace.GAMEOVER);
+				writeScore();
 				reset();
 				continued = -1;
 			}
@@ -189,6 +204,7 @@ public class GameField {
 				ICharacter enemy = j.next();
 				if (bullet.isColliding(enemy)) {
 					enemy.tookDamage(bullet.getDamage());
+					score = score + 10;
 				}
 			}
 			
@@ -201,8 +217,10 @@ public class GameField {
 			if (boss != null) {
 				if (bullet.isColliding(boss)) {
 					boss.tookDamage(bullet.getDamage());
+					score = score + 10;
 					if (boss.isDeletable()) {
 						game.enterState(GauchoSpace.GAMEOVER);
+						writeScore();
 						reset();
 						return;
 					}
@@ -276,6 +294,10 @@ public class GameField {
 		continued = value;
 	}
 	
+	public int returnScore(){
+		return score;
+	}
+	
 	// Resets the gamefield
 	public void reset(){
 		boss = null;
@@ -289,6 +311,7 @@ public class GameField {
 		yDisplacement = 0;
 		timer = 0.0f;
 		continued = -1;
+		hiScore = getHiScore();
 		try {
 			character = new TestPlayer(this);
 			levelManager = new LevelManager(this);
@@ -296,4 +319,40 @@ public class GameField {
 			e.printStackTrace(); // TODO
 		}
 	}
+	
+	// Saves score to the save file
+    private void writeScore() {
+        try {
+            ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
+            ArrayList<ScoreRecord> scores = stl.loadScoreTable();
+            ScoreRecord sr = new ScoreRecord("aac", score);
+            scores.add(sr);
+            stl.saveScoreTable(scores);
+            stl = null;
+        } catch (FileNotFoundException e) {
+        	e.printStackTrace();
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
+    }
+    
+    private int getHiScore(){
+    	int hiScore = 0;
+    	try{
+    		ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
+    		ArrayList<ScoreRecord> scores = stl.loadScoreTable();
+    		if (!scores.isEmpty()){
+    			ScoreRecord score = scores.get(0);
+    			hiScore = score.getPoints();
+    		}
+    	} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return hiScore;
+    }
 }
