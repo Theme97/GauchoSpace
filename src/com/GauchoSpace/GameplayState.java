@@ -2,6 +2,7 @@ package com.GauchoSpace;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
@@ -58,13 +59,13 @@ public class GameplayState extends BasicGameState {
 		field.update(gc, game, delta);
 		// used for continue screen buttons
 		if (optionSelected == CONTINUED){
-			field.changeContinued(CONTINUED);
 			selection = -1;
+			field.changeContinued(CONTINUED);
 			optionSelected = -1;
 		}
 		else if (optionSelected == QUIT){
-			field.changeContinued(QUIT);
 			selection = -1;
+			field.changeContinued(QUIT);
 			optionSelected = -1;
 		}
 	}
@@ -108,4 +109,21 @@ public class GameplayState extends BasicGameState {
 			soundTracker = arg0;
 		}
 	}
+	
+	@Override
+	public void keyPressed(int key, char c){
+		if (field.returnLives() <= 0){
+			if (key == Input.KEY_LEFT || key == Input.KEY_RIGHT) {
+				if (selection == CONTINUED)	selection = QUIT;
+				else if (selection == QUIT) selection = CONTINUED;
+				else selection = CONTINUED;
+				selectSoundTracker(selection);
+			}
+			else if (key == Input.KEY_Z) {
+				if (optionSelected != selection) menuEnterFx.play(1, .4f);
+				optionSelected = selection;
+			}
+		}
+	}
+
 }
