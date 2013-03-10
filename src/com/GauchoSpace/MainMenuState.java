@@ -1,13 +1,17 @@
 package com.GauchoSpace;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.Music;
+import org.newdawn.slick.Input;
 
 
 public class MainMenuState extends BasicGameState {
@@ -42,7 +46,7 @@ public class MainMenuState extends BasicGameState {
 			throws SlickException {
 		background = new Image("res/mainmenu.png");
 		playText = new Image("res/play.png");
-		statsText = new Image("res/stats.png");
+		statsText = new Image("res/scoreboardtext.png");
 		quitText = new Image("res/quit.png");
 		normalModeText = new Image("res/normalmode.png");
 		survivalModeText = new Image("res/survivalmode.png");
@@ -54,13 +58,13 @@ public class MainMenuState extends BasicGameState {
 		backgroundMusic.loop();
 		soundTracker = -1;
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2)
+	public void render(GameContainer gc, StateBasedGame game, Graphics graphics)
 			throws SlickException {
 		background.draw();
+
 		// changes alpha value of selector
 		selector.setAlpha(.5f);
 		// draws buttons
@@ -74,14 +78,16 @@ public class MainMenuState extends BasicGameState {
 			survivalModeText.draw(50, 585);
 			backText.draw(50,675);
 		}
+		
 		// draws selector
 		if (selection == GauchoSpace.GAMEPLAY) {
 			selector.draw(50, 495);
-		} else if (selection == GauchoSpace.OPTIONS_MENU) {
+		} else if (selection == GauchoSpace.SCORE_STATE) {
 			selector.draw(50,585);
 		} else if (selection == GauchoSpace.EXIT_STATE) {
 			selector.draw(50, 675);
 		}
+		
 		// TODO Auto-generated method stub
 		
 	}	
@@ -101,7 +107,7 @@ public class MainMenuState extends BasicGameState {
 			if (newy > 495 && newy < 580) {
 				selection = GauchoSpace.GAMEPLAY;
 			} else if (newy > 580 && newy < 670){
-				selection = GauchoSpace.OPTIONS_MENU;
+				selection = GauchoSpace.SCORE_STATE;
 			} else if (newy > 675 && newy < 755) {
 				// exits game
 				selection = GauchoSpace.EXIT_STATE;
@@ -117,37 +123,40 @@ public class MainMenuState extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer arg0, StateBasedGame game, int arg2)
+	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
 		// TODO Auto-generated method stub
-			if (optionSelected == GauchoSpace.GAMEPLAY) {
-				// enters mode selection if not yet there
-				// otherwise enters gameplay mode
-				if (gameModeSelection == 1) {
-					game.enterState(GauchoSpace.GAMEPLAY);
-					backgroundMusic.stop();
-				}
-				gameModeSelection = 1;
-				optionSelected = -1;
-			} else if (optionSelected == GauchoSpace.OPTIONS_MENU) {
-				// enters stats/options state
-				// game.enterState(3);
-			} else if (optionSelected == GauchoSpace.EXIT_STATE) {
-				// goes back if in mode selection menu
-				// otherwise exits
-				if(gameModeSelection == 1) {
-					gameModeSelection = 0;
-					optionSelected = -1;
-				}
-				else{
-					System.exit(0);
-				}
+		if (optionSelected == GauchoSpace.GAMEPLAY) {
+			// enters mode selection if not yet there
+			// otherwise enters gameplay mode
+			if (gameModeSelection == 1) {
+				game.enterState(GauchoSpace.GAMEPLAY);
+				backgroundMusic.stop();
 			}
+			gameModeSelection = 1;
+			optionSelected = -1;
+		} else if (optionSelected == GauchoSpace.SCORE_STATE) {
+			// enters high score state
+				if(gameModeSelection == 0) {
+					game.enterState(GauchoSpace.SCORE_STATE, new FadeOutTransition(Color.black),
+		                    new FadeInTransition(Color.black));
+			}
+		} else if (optionSelected == GauchoSpace.EXIT_STATE) {
+			// goes back if in mode selection menu
+			// otherwise exits
+			if(gameModeSelection == 1) {
+				gameModeSelection = 0;
+				optionSelected = -1;
+			}
+			else{
+				System.exit(0);
+			}
+		}
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-		backgroundMusic.loop();
+		if (!backgroundMusic.playing()) backgroundMusic.loop();
 		selection = -1;
 		optionSelected = selection;
 	}
@@ -159,6 +168,28 @@ public class MainMenuState extends BasicGameState {
 				selectFx.play(1, .2f);
 			}
 			soundTracker = arg0;
+		}
+	}
+	
+	@Override
+	public void keyPressed(int key, char c){
+		if (key == Input.KEY_UP) {
+			if (selection == GauchoSpace.GAMEPLAY) selection = GauchoSpace.EXIT_STATE;
+			else if (selection == GauchoSpace.SCORE_STATE) selection = GauchoSpace.GAMEPLAY;
+			else if (selection == GauchoSpace.EXIT_STATE) selection = GauchoSpace.SCORE_STATE;
+			else selection = GauchoSpace.EXIT_STATE;
+			selectSoundTracker(selection);
+		}
+		else if (key == Input.KEY_DOWN) {
+			if (selection == GauchoSpace.GAMEPLAY) selection = GauchoSpace.SCORE_STATE;
+			else if (selection == GauchoSpace.SCORE_STATE) selection = GauchoSpace.EXIT_STATE;
+			else if (selection == GauchoSpace.EXIT_STATE) selection = GauchoSpace.GAMEPLAY;
+			else selection = GauchoSpace.EXIT_STATE;
+			selectSoundTracker(selection);
+		}
+		else if (key == Input.KEY_Z){
+			if (optionSelected != selection) menuEnterFx.play(1, .4f);
+			optionSelected = selection;
 		}
 	}
 }

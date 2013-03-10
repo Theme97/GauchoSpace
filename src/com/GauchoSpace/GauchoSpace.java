@@ -16,7 +16,7 @@ public class GauchoSpace extends StateBasedGame {
 	public final static int MAIN_MENU = 1;
 	public final static int GAMEPLAY = 2;
 	public final static int GAMEOVER = 3;
-	public final static int OPTIONS_MENU = 4;
+	public final static int SCORE_STATE = 4;
 	public final static int EXIT_STATE = 5;
 	/*
 	public static enum STATE {
@@ -46,5 +46,6 @@ public class GauchoSpace extends StateBasedGame {
 		this.addState(new MainMenuState(MAIN_MENU));
 		this.addState(new GameplayState(GAMEPLAY));
 		this.addState(new GameOverState(GAMEOVER));
+		this.addState(new ScoreState(SCORE_STATE));
 	}
 }
