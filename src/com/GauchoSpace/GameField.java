@@ -104,7 +104,8 @@ public class GameField {
 		graphics.drawImage(fieldBackground, -550, yDisplacement - fieldBackground.getHeight());
 		if (yDisplacement >= fieldBackground.getHeight()) yDisplacement = 0;
 		
-		// render order: enemies, boss, player, player bullets, enemy bullets
+		// render order: level, enemies, boss, player, player bullets, enemy bullets
+		levelManager.render(gc, game, graphics);
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
 		if (boss != null) boss.render(gc, game, graphics);
 		character.render(gc, game, graphics);

@@ -13,12 +13,12 @@ public class LevelManager {
 	
 	public LevelManager(GameField field) {
 		this.field = field;
-		level = new Level1();
+		level = new monochrome();
 		ticks = 0;
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics graphics) {
-		// do we need this?
+		level.render(field, this, graphics);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
