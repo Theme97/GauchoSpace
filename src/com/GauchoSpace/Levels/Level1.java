@@ -102,9 +102,13 @@ public class Level1 implements ILevel {
 	}
 
 	@Override
-	public void render(GameField field, LevelManager manager, Graphics graphics) {
+	public void renderBackground(GameField field, LevelManager manager, Graphics graphics) {
 		// TODO Auto-generated method stub
-		
+	}
+	
+	@Override
+	public void renderForeground(GameField field, LevelManager manager, Graphics graphics) {
+		// TODO Auto-generated method stub
 	}
 }
 

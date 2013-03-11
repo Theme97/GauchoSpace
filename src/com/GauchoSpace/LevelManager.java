@@ -17,8 +17,12 @@ public class LevelManager {
 		ticks = 0;
 	}
 	
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics graphics) {
-		level.render(field, this, graphics);
+	public void renderBackground(GameContainer gc, StateBasedGame sbg, Graphics graphics) {
+		level.renderBackground(field, this, graphics);
+	}
+	
+	public void renderForeground(GameContainer gc, StateBasedGame sbg, Graphics graphics) {
+		level.renderForeground(field, this, graphics);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {

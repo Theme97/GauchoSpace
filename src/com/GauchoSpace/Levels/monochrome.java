@@ -220,15 +220,20 @@ public class monochrome implements ILevel {
 	}
 	
 	@Override
-	public void render(GameField field, LevelManager manager, Graphics graphics) {
+	public void renderBackground(GameField field, LevelManager manager, Graphics graphics) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void renderForeground(GameField field, LevelManager manager, Graphics graphics) {
 		if (leftPulseTicks > 0) {
-			leftPulseImage.setAlpha((float)leftPulseTicks / 30);
+			leftPulseImage.setAlpha((float)leftPulseTicks / 45);
 			graphics.drawImage(leftPulseImage, 0, 0);
 			leftPulseTicks--;
 		}
 		
 		if (rightPulseTicks > 0) {
-			rightPulseImage.setAlpha((float)rightPulseTicks / 30);
+			rightPulseImage.setAlpha((float)rightPulseTicks / 45);
 			graphics.drawImage(rightPulseImage, 778, 0);
 			rightPulseTicks--;
 		}

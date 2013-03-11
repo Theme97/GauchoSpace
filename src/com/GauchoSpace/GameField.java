@@ -104,13 +104,14 @@ public class GameField {
 		graphics.drawImage(fieldBackground, -550, yDisplacement - fieldBackground.getHeight());
 		if (yDisplacement >= fieldBackground.getHeight()) yDisplacement = 0;
 		
-		// render order: level, enemies, boss, player, player bullets, enemy bullets
-		levelManager.render(gc, game, graphics);
+		// render order: level background, enemies, boss, player, player bullets, enemy bullets, level foreground
+		levelManager.renderBackground(gc, game, graphics);
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
 		if (boss != null) boss.render(gc, game, graphics);
 		character.render(gc, game, graphics);
 		for (IBullet bullet : playerBullets) bullet.render(gc, game, graphics);
 		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
+		levelManager.renderForeground(gc, game, graphics);
 		
 		// pause screen
 		if (paused) {
