@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -36,15 +37,17 @@ public class monochrome implements ILevel {
 	private int rightPulseTicks;
 	private Image rightPulseImage;
 	private Collection<PulseBullet> rightPulseBullets;
-	
+
 	private Image bottomPulseImage;
 	private int bottomPulseTicks;
 
+	private Image topPulseImage;
+	private Color topPulseColor;
+	private int topPulseTicks;
+
 	private boolean pulseFlow;
-	
+
 	private ResourceHandler resources;
-	private Image image01;
-	private Image image02;
 
 	public monochrome() {
 		try {
@@ -52,15 +55,23 @@ public class monochrome implements ILevel {
 			leftPulseImage = new Image("res/monochrome/pulse.png");
 			rightPulseImage = leftPulseImage.getFlippedCopy(true, false);
 			bottomPulseImage = new Image("res/monochrome/pulse_bottom.png");
-			image01 = new Image("res/monochrome/bg/01.png");
-			image02 = new Image("res/monochrome/bg/02.png");
-			
+			topPulseImage = bottomPulseImage.getFlippedCopy(false, true);
+
 			resources = new ResourceHandler();
+			resources.put("bg01", "res/monochrome/bg/01.png");
+			resources.put("bg02", "res/monochrome/bg/02.png");
+			resources.put("bg03", "res/monochrome/bg/03.png");
+			resources.put("bg04", resources.get("bg03").copy());
+			resources.put("bg05", "res/monochrome/bg/05.png");
+			resources.put("bg06", "res/monochrome/bg/06.png");
+			resources.put("bg07", "res/monochrome/bg/07.png");
+			resources.put("bg08", "res/monochrome/bg/08.png");
+			resources.put("bg09", "res/monochrome/bg/09.png");
+
 			resources.put("pulse bullet", "res/monochrome/pulse_bullet.png");
 			resources.put("gravity bullet", "res/monochrome/gravity_bullet.png");
-			
-			Image synthBullets = new Image("res/monochrome/synth_bullet.png", false, Image.FILTER_LINEAR);
-			SpriteSheet spriteSheet = new SpriteSheet(synthBullets.getScaledCopy(2), 24, 22);
+
+			SpriteSheet spriteSheet = new SpriteSheet("res/monochrome/synth_bullet.png", 27, 27, 1);
 			resources.put("synth 0", spriteSheet.getSprite(0, 0));
 			resources.put("synth 1", spriteSheet.getSprite(1, 0));
 			resources.put("synth 2", spriteSheet.getSprite(2, 0));
@@ -85,7 +96,7 @@ public class monochrome implements ILevel {
 			@Override
 			public void perform(GameField field) { pulseFromRight(field); }
 		};
-		
+
 		Action pulseFromBottom = new Action() {
 			@Override
 			public void perform(GameField field) { pulseFromBottom(field); }
@@ -213,7 +224,7 @@ public class monochrome implements ILevel {
 
 		// 17
 		actions.add(new TimedAction( 27.968, enableFlow)); // FLOW
-		
+
 		actions.add(new TimedAction( 27.968, pulseFromBottom));
 		actions.add(new TimedAction( 27.968, pulseFromLeft)); // kick
 		actions.add(new TimedAction( 28.397, pulseFromRight)); // snare
@@ -221,7 +232,7 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 28.802, pulseFromBottom));
 		actions.add(new TimedAction( 29.028, pulseFromLeft)); // kick
 		actions.add(new TimedAction( 29.251, pulseFromRight)); // snare
-		
+
 		actions.add(new TimedAction( 27.968        , synthPattern(2)));
 		actions.add(new TimedAction( 27.968 + 0.321, synthPattern(3)));
 		actions.add(new TimedAction( 27.968 + 0.643, synthPattern(4)));
@@ -237,7 +248,7 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 30.536, pulseFromBottom));
 		actions.add(new TimedAction( 30.753, pulseFromLeft)); // kick
 		actions.add(new TimedAction( 30.968, pulseFromRight)); // snare
-		
+
 		actions.add(new TimedAction( 29.684        , synthPattern(2)));
 		actions.add(new TimedAction( 29.684 + 0.321, synthPattern(3)));
 		actions.add(new TimedAction( 29.684 + 0.643, synthPattern(4)));
@@ -253,7 +264,7 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 32.268, pulseFromBottom));
 		actions.add(new TimedAction( 32.461, pulseFromLeft)); // kick
 		actions.add(new TimedAction( 32.683, pulseFromRight)); // snare
-		
+
 		actions.add(new TimedAction( 31.397        , synthPattern(2)));
 		actions.add(new TimedAction( 31.397 + 0.321, synthPattern(3)));
 		actions.add(new TimedAction( 31.397 + 0.643, synthPattern(4)));
@@ -269,14 +280,14 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 33.963, pulseFromBottom));
 		actions.add(new TimedAction( 34.181, pulseFromLeft)); // kick
 		actions.add(new TimedAction( 34.396, pulseFromRight)); // snare
-		
+
 		actions.add(new TimedAction( 33.109        , synthPattern(2)));
 		actions.add(new TimedAction( 33.109 + 0.321, synthPattern(3)));
 		actions.add(new TimedAction( 33.109 + 0.643, synthPattern(4)));
 		actions.add(new TimedAction( 33.109 + 0.964, synthPattern(5)));
 		actions.add(new TimedAction( 33.109 + 1.286, synthPattern(0)));
 		actions.add(new TimedAction( 33.109 + 1.500, synthPattern(1)));
-		
+
 		// 21
 		actions.add(new TimedAction( 34.825, pulseFromBottom));
 		actions.add(new TimedAction( 34.825, pulseFromLeft)); // kick
@@ -285,14 +296,14 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 35.695, pulseFromBottom));
 		actions.add(new TimedAction( 35.889, pulseFromLeft)); // kick
 		actions.add(new TimedAction( 36.112, pulseFromRight)); // snare
-		
+
 		actions.add(new TimedAction( 34.825        , synthPattern(2)));
 		actions.add(new TimedAction( 34.825 + 0.321, synthPattern(3)));
 		actions.add(new TimedAction( 34.825 + 0.643, synthPattern(4)));
 		actions.add(new TimedAction( 34.825 + 0.964, synthPattern(5)));
 		actions.add(new TimedAction( 34.825 + 1.286, synthPattern(0)));
 		actions.add(new TimedAction( 34.825 + 1.500, synthPattern(1)));
-		
+
 		// 22
 		actions.add(new TimedAction( 36.540, pulseFromBottom));
 		actions.add(new TimedAction( 36.540, pulseFromLeft)); // kick
@@ -301,7 +312,7 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 37.425, pulseFromBottom));
 		actions.add(new TimedAction( 37.612, pulseFromLeft)); // kick
 		actions.add(new TimedAction( 37.827, pulseFromRight)); // snare
-		
+
 		actions.add(new TimedAction( 36.540        , synthPattern(2)));
 		actions.add(new TimedAction( 36.540 + 0.321, synthPattern(3)));
 		actions.add(new TimedAction( 36.540 + 0.643, synthPattern(4)));
@@ -358,25 +369,28 @@ public class monochrome implements ILevel {
 	@Override
 	public void renderBackground(GameField field, LevelManager manager, Graphics graphics) {
 		float elapsedTime = (float)(System.currentTimeMillis() - time) * 0.001f;
-		
-		if (0.540 <= elapsedTime && elapsedTime <= 7.397) { // 6.857
-			float t = elapsedTime - 0.540f;
+
+		drawLevelImage(graphics, "bg01", elapsedTime,  0.540f,  7.097f, 150, 150,  5,  7); // Group 14 Presents
+		drawLevelImage(graphics, "bg02", elapsedTime,  7.097f, 14.254f,  30, 500,  3,  7); // monochrome
+		drawLevelImage(graphics, "bg03", elapsedTime, 13.954f, 20.254f, 200, 160,  5,  5); // 振りほどいて
+		drawLevelImage(graphics, "bg04", elapsedTime, 15.670f, 21.112f, 440, 380, -5,  5); // 振りほどいて
+		drawLevelImage(graphics, "bg05", elapsedTime, 17.180f, 21.970f, 310, 570,  5, -5); // なみだの渦
+		drawLevelImage(graphics, "bg06", elapsedTime, 19.096f, 22.828f, 430, 790, -5, -5); // 飲み込まれて
+		drawLevelImage(graphics, "bg07", elapsedTime, 20.812f, 27.562f, 285, 315,  5,  5); // どんなにただ
+		drawLevelImage(graphics, "bg08", elapsedTime, 22.526f, 28.420f, 420, 500,  0,  5); // 願おうとも
+		drawLevelImage(graphics, "bg09", elapsedTime, 24.034f, 29.278f, 300, 770,  3, -5); // 響かない歌声
+	}
+
+	private void drawLevelImage(Graphics graphics, String ref, float time, float start, float end, float x, float y, float dx, float dy) {
+		Image image = resources.get(ref);
+		if (start <= time && time < end) {
+			float t = time - start;
 			if (t <= 0.9) {
-				image01.setAlpha(t);
-			} else if (6.057 <= t) {
-				image01.setAlpha(6.857f - t);
+				image.setAlpha(t);
+			} else if (end - 0.9 < time) {
+				image.setAlpha(end - time);
 			}
-			graphics.drawImage(image01, 100 + t*12.7f, 150 + t*7.3f);
-		}
-		
-		if (7.397 <= elapsedTime && elapsedTime <= 14.254) { // 6.857
-			float t = elapsedTime - 7.397f;
-			if (t <= 0.9) {
-				image02.setAlpha(t);
-			} else if (6.057 <= t) {
-				image02.setAlpha(6.857f - t);
-			}
-			graphics.drawImage(image02, 40 + t*2.9f, 200 + t*7.3f);
+			graphics.drawImage(image, x + t * dx, y + t * dy);
 		}
 	}
 
@@ -393,11 +407,17 @@ public class monochrome implements ILevel {
 			graphics.drawImage(rightPulseImage, 778, 0);
 			rightPulseTicks--;
 		}
-		
+
 		if (bottomPulseTicks > 0) {
 			bottomPulseImage.setAlpha((float)bottomPulseTicks / 40);
 			graphics.drawImage(bottomPulseImage, 0, 960);
 			bottomPulseTicks--;
+		}
+
+		if (topPulseTicks > 0) {
+			topPulseImage.setAlpha((float)topPulseTicks / 20);
+			graphics.drawImage(topPulseImage, 0, 0, topPulseColor);
+			topPulseTicks--;
 		}
 	}
 
@@ -430,22 +450,33 @@ public class monochrome implements ILevel {
 		for (PulseBullet bullet : leftPulseBullets)  bullet.flow(flow);
 		for (PulseBullet bullet : rightPulseBullets) bullet.flow(flow);
 	}
-	
+
 	private void pulseFromBottom(GameField field) {
 		bottomPulseTicks = 100;
-		
+
 		float x = (float)Math.random() * 758 + 50f;
 		float angle = (float)Math.random() * 15 + 82.5f;
 		field.addEnemyBullet(new GravityBullet(x, angle - 5));
 		field.addEnemyBullet(new GravityBullet(x, angle    ));
 		field.addEnemyBullet(new GravityBullet(x, angle + 5));
 	}
-	
+
 	private Action synthPattern(final int i) {
 		return new Action() {
 			@Override
 			public void perform(GameField field) {
 				field.addEnemyBullet(new SynthBullet(i));
+
+				topPulseTicks = 30;
+				switch (i) {
+				case 0: topPulseColor = Color.red; break;
+				case 1: topPulseColor = Color.orange; break;
+				case 2: topPulseColor = Color.yellow; break;
+				case 3: topPulseColor = Color.green; break;
+				case 4: topPulseColor = Color.cyan; break;
+				case 5: topPulseColor = Color.blue; break;
+				default: topPulseColor = Color.gray;
+				}
 			}
 		};
 	}
@@ -520,22 +551,22 @@ public class monochrome implements ILevel {
 			speed = Math.max(speed - 3, flow ? 1f : 0f);
 		}
 	}
-	
+
 	private class GravityBullet implements IBullet {
 		private Vector2f pos;
 		private Vector2f vel;
 		private Vector2f accel;
 		private Image sprite;
-		
+
 		public GravityBullet(float x, float angle) {
 			pos = new Vector2f(x, 1002);
 			vel = new Vector2f(-angle).scale(10);
 			accel = new Vector2f(0, 0.1f);
-			
+
 			sprite = resources.get("gravity bullet").copy();
 			sprite.setCenterOfRotation(4, 9);
 		}
-		
+
 		@Override
 		public int getDamage() {
 			return 1;
@@ -570,16 +601,16 @@ public class monochrome implements ILevel {
 			vel.add(accel);
 		}
 	}
-	
+
 	private class SynthBullet implements IBullet {
 		private Vector2f pos;
 		private Image sprite;
-		
+
 		public SynthBullet(int i) {
 			pos = new Vector2f((float)Math.random() * 858, -2);
 			sprite = resources.get("synth " + i);
 		}
-		
+
 		@Override
 		public int getDamage() {
 			return 1;
@@ -603,7 +634,7 @@ public class monochrome implements ILevel {
 
 		@Override
 		public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
-			graphics.drawImage(sprite, pos.x - 12, pos.y - 11);
+			graphics.drawImage(sprite, pos.x - 13.5f, pos.y - 13.5f);
 		}
 
 		@Override
@@ -636,17 +667,17 @@ public class monochrome implements ILevel {
 	private interface Action {
 		public void perform(GameField field);
 	}
-	
+
 	/* --------------------- *
 	 * ResourceHandler class *
 	 * --------------------- */
 	private class ResourceHandler {
 		private HashMap<String, Image> resources;
-		
+
 		ResourceHandler() {
 			resources = new HashMap<String, Image>();
 		}
-		
+
 		public boolean put(String ref) {
 			try {
 				return put(ref, new Image(ref));
@@ -656,7 +687,7 @@ public class monochrome implements ILevel {
 				return false;
 			}
 		}
-		
+
 		public boolean put(String name, String ref) {
 			try {
 				return put(name, new Image(ref));
@@ -666,7 +697,7 @@ public class monochrome implements ILevel {
 				return false;
 			}
 		}
-		
+
 		public boolean put(String name, Image image) {
 			if (!resources.containsKey(name)) {
 				resources.put(name, image);
@@ -675,7 +706,7 @@ public class monochrome implements ILevel {
 				return false;
 			}
 		}
-		
+
 		public Image get(String name) {
 			return resources.get(name);
 		}
