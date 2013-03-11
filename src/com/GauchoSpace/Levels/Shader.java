@@ -12,8 +12,6 @@ public class Shader {
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	
-	int oldProgram;
-	
 	public Shader(String vertexShaderFile, String fragmentShaderFile) {
 		glShaderSource(vertexShader, readFile(vertexShaderFile));
 		glCompileShader(vertexShader);
@@ -34,13 +32,7 @@ public class Shader {
 	}
 	
 	public void use(boolean enable) {
-		//glUseProgram(enable ? shaderProgram : 0);
-		if (enable) {
-			oldProgram = glGetInteger(GL_CURRENT_PROGRAM);
-			glUseProgram(shaderProgram);
-		} else {
-			glUseProgram(oldProgram);
-		}
+		glUseProgram(enable ? shaderProgram : 0);
 	}
 	
 	private String readFile(String filename) {
