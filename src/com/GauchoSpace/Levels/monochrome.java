@@ -356,6 +356,12 @@ public class monochrome implements ILevel {
 	public void update(GameField field, LevelManager manager, int ticks) {
 		// init
 		if (ticks == 0) {
+		}
+		
+		// delay
+		if (ticks < 60) {
+			return;
+		} else if (ticks == 60) {
 			music.play();
 			time = System.currentTimeMillis();
 		}
