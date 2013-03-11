@@ -48,8 +48,14 @@ public class monochrome implements ILevel {
 	private boolean pulseFlow;
 
 	private ResourceHandler resources;
+	
+	private Shader shader;
 
 	public monochrome() {
+		shader = new Shader(
+				"res/monochrome/shader/pass.vert",
+				"res/monochrome/shader/monochrome.frag");
+		
 		try {
 			music = new Music("res/monochrome/music.ogg");
 			leftPulseImage = new Image("res/monochrome/pulse.png");
@@ -105,6 +111,11 @@ public class monochrome implements ILevel {
 		Action enableFlow = new Action() {
 			@Override
 			public void perform(GameField field) { setPulseFlow(true); }
+		};
+		
+		Action enableFade = new Action() {
+			@Override
+			public void perform(GameField field) { setPulseFade(true); }
 		};
 
 		actions = new PriorityQueue<TimedAction>(100, new Comparator<TimedAction>() {
@@ -319,6 +330,23 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 36.540 + 0.964, synthPattern(5)));
 		actions.add(new TimedAction( 36.540 + 1.286, synthPattern(0)));
 		actions.add(new TimedAction( 36.540 + 1.500, synthPattern(1)));
+		
+		// 23
+		actions.add(new TimedAction( 39.006, enableFade)); // FADE
+		
+		actions.add(new TimedAction( 38.255, pulseFromBottom));
+		actions.add(new TimedAction( 38.255, pulseFromLeft)); // kick
+		actions.add(new TimedAction( 38.683, pulseFromRight)); // snare
+		actions.add(new TimedAction( 39.006, pulseFromLeft)); // kick
+		actions.add(new TimedAction( 39.325, pulseFromLeft)); // kick
+		actions.add(new TimedAction( 39.537, pulseFromRight)); // snare
+		
+		actions.add(new TimedAction( 38.255        , synthPattern(2)));
+		actions.add(new TimedAction( 38.255 + 0.321, synthPattern(3)));
+		actions.add(new TimedAction( 38.255 + 0.643, synthPattern(4)));
+		actions.add(new TimedAction( 38.255 + 0.964, synthPattern(5)));
+		actions.add(new TimedAction( 38.255 + 1.286, synthPattern(0)));
+		actions.add(new TimedAction( 38.255 + 1.500, synthPattern(1)));
 
 		// done!
 		nextActionTime = actions.peek().getTime();
@@ -379,6 +407,8 @@ public class monochrome implements ILevel {
 		drawLevelImage(graphics, "bg07", elapsedTime, 20.812f, 27.562f, 285, 315,  5,  5); // どんなにただ
 		drawLevelImage(graphics, "bg08", elapsedTime, 22.526f, 28.420f, 420, 500,  0,  5); // 願おうとも
 		drawLevelImage(graphics, "bg09", elapsedTime, 24.034f, 29.278f, 300, 770,  3, -5); // 響かない歌声
+		
+		//shader.use(true);
 	}
 
 	private void drawLevelImage(Graphics graphics, String ref, float time, float start, float end, float x, float y, float dx, float dy) {
@@ -419,6 +449,8 @@ public class monochrome implements ILevel {
 			graphics.drawImage(topPulseImage, 0, 0, topPulseColor);
 			topPulseTicks--;
 		}
+		
+		//shader.use(false);
 	}
 
 	private void pulseFromLeft(GameField field) {
@@ -449,6 +481,11 @@ public class monochrome implements ILevel {
 		pulseFlow = flow;
 		for (PulseBullet bullet : leftPulseBullets)  bullet.flow(flow);
 		for (PulseBullet bullet : rightPulseBullets) bullet.flow(flow);
+	}
+	
+	private void setPulseFade(boolean fade) {
+		//pulseFade = fade;
+		
 	}
 
 	private void pulseFromBottom(GameField field) {
