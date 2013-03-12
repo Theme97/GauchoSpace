@@ -68,7 +68,7 @@ public class GameplayState extends BasicGameState {
 			optionSelected = -1;
 		}
 	}
-	
+
 	@Override
 	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
@@ -89,7 +89,7 @@ public class GameplayState extends BasicGameState {
 		}
 		selectSoundTracker(selection);
 	}
-	
+
 	@Override
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		super.mouseClicked(button, x, y, clickCount);
@@ -98,38 +98,52 @@ public class GameplayState extends BasicGameState {
 			optionSelected = selection;
 		}
 	}	
-	
+
 	// plays sound effect when mouse hovers over a button only once
-	public void selectSoundTracker(int arg0){
-		if(arg0 != soundTracker){
+	public void selectSoundTracker(int arg0) {
+		if(arg0 != soundTracker) {
 			if (arg0 != -1) {
 				selectFx.play(1, .2f);
 			}
 			soundTracker = arg0;
 		}
 	}
-	
+
 	@Override
-	public void keyPressed(int key, char c){
-		if (field.returnContinued() == QUIT){
-			if ((key == Input.KEY_BACK || key == Input.KEY_DELETE) && field.getNameLength() > 0) {
-				field.setName(field.getName().substring(0,field.getNameLength()-1));
+	public void keyPressed(int key, char c) {
+		if (field.returnContinued() == QUIT) {
+			switch (key) {
+				case Input.KEY_BACK:
+				case Input.KEY_DELETE:
+					String name = field.getName();
+					if (name.length() > 0) {
+						field.setName(name.substring(0, name.length() - 1));
+					}
+					break;
+
+				case Input.KEY_ENTER:
+					field.setGameOver();
+					break;
+
+				default:
+					if (!Character.isLetterOrDigit(c) && key != Input.KEY_UNDERLINE && key != Input.KEY_MINUS) return;
+
+					String name2 = field.getName();
+					if (name2.length() > 16) return;
+					field.setName(field.getName() + c);
 			}
-			else if (key == Input.KEY_ENTER) field.setGameOver();
-			else if ((key == Input.KEY_UNDERLINE || key == Input.KEY_MINUS || Character.isLetterOrDigit(c)) &&
-					field.getNameLength() <= 16) 
-				field.setName(field.getName() + c);
-		}
-		else if (field.returnLives() <= 0){
-			if (key == Input.KEY_LEFT || key == Input.KEY_RIGHT) {
-				if (selection == CONTINUED)	selection = QUIT;
-				else if (selection == QUIT) selection = CONTINUED;
-				else selection = CONTINUED;
-				selectSoundTracker(selection);
-			}
-			else if (key == Input.KEY_Z) {
-				if (optionSelected != selection) menuEnterFx.play(1, .4f);
-				optionSelected = selection;
+		} else if (field.returnLives() <= 0) {
+			switch (key) {
+				case Input.KEY_LEFT:
+				case Input.KEY_RIGHT:
+					selection = (selection == CONTINUED) ? QUIT : CONTINUED;
+					selectSoundTracker(selection);
+					break;
+
+				case Input.KEY_Z:
+					if (optionSelected != selection) menuEnterFx.play(1, .4f);
+					optionSelected = selection;
+					break;
 			}
 		}
 	}
