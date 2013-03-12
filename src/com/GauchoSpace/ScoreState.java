@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -35,6 +34,7 @@ public class ScoreState extends BasicGameState{
     private int soundTracker;
     private int selection;
     private int optionSelected;
+    private String filepath;
 
     public final static int BACK = 1;
     
@@ -51,16 +51,17 @@ public class ScoreState extends BasicGameState{
     @Override
     public void init(GameContainer gc, StateBasedGame game)
     		throws SlickException{
-    	background = new Image("res/Scoreboard.jpg");
+    	background = new Image("res/scoreboard.jpg");
     	selector = new Image("res/selector.png");
 		font = new Font("Trajan Pro", Font.BOLD, 30);
 		ttf = new TrueTypeFont(font, true);
 		selectFx = new Sound("res/menuselect.wav");
 		menuEnterFx = new Sound("res/menuEnter.wav");
     	selector.setAlpha(.5f);
+		filepath = "scores.txt";
 		
     	try {
-    		ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
+    		ScoreTableLoader stl = new ScoreTableLoader(filepath);
     		scores = new ArrayList<ScoreRecord>(stl.loadScoreTable());
     	}	catch (FileNotFoundException e) {
     			e.printStackTrace();
@@ -101,7 +102,7 @@ public class ScoreState extends BasicGameState{
     		throws SlickException {
     	
     	try {
-    		ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
+    		ScoreTableLoader stl = new ScoreTableLoader(filepath);
     		scores = new ArrayList<ScoreRecord>(stl.loadScoreTable());
     	} catch (FileNotFoundException e) {
     		e.printStackTrace();

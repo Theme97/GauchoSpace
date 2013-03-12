@@ -18,7 +18,6 @@ public class GameplayState extends BasicGameState {
 	private Image selector;
 	private Sound selectFx;
 	private Sound menuEnterFx;
-	
 
 	public final static int CONTINUED = 1;
 	public final static int QUIT = 2;
@@ -112,7 +111,16 @@ public class GameplayState extends BasicGameState {
 	
 	@Override
 	public void keyPressed(int key, char c){
-		if (field.returnLives() <= 0){
+		if (field.returnContinued() == QUIT){
+			if ((key == Input.KEY_BACK || key == Input.KEY_DELETE) && field.getNameLength() > 0) {
+				field.setName(field.getName().substring(0,field.getNameLength()-1));
+			}
+			else if (key == Input.KEY_ENTER) field.setGameOver();
+			else if ((key == Input.KEY_UNDERLINE || key == Input.KEY_MINUS || Character.isLetterOrDigit(c)) &&
+					field.getNameLength() <= 16) 
+				field.setName(field.getName() + c);
+		}
+		else if (field.returnLives() <= 0){
 			if (key == Input.KEY_LEFT || key == Input.KEY_RIGHT) {
 				if (selection == CONTINUED)	selection = QUIT;
 				else if (selection == QUIT) selection = CONTINUED;
@@ -125,5 +133,4 @@ public class GameplayState extends BasicGameState {
 			}
 		}
 	}
-
 }

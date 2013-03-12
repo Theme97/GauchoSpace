@@ -31,7 +31,9 @@ public class GameField {
 	private Image uiBackground;
 	private Image fieldBackground;
 	private Image continueButton;
+	private Image enterName;
 	private boolean paused;
+	private boolean gameover;
 	private int continued;
 	private int lives;
 	private int score;
@@ -44,6 +46,7 @@ public class GameField {
 	private Font font;
 	private TrueTypeFont ttf;
 	private boolean cheatInvincibility;
+	private String name;
 	
 	public GameField() throws SlickException {
 		levelManager = new LevelManager(this);
@@ -55,6 +58,7 @@ public class GameField {
 		uiBackground = new Image("res/background_ui.png");
 		fieldBackground = new Image("res/background_field.jpg");
 		continueButton = new Image("res/continue.png");
+		enterName = new Image("res/nametext.png");
 		paused = false;
 		lives = 3;
 		score = 0;
@@ -67,6 +71,8 @@ public class GameField {
 		font = new Font("Verdana", Font.BOLD, 30);
 		ttf = new TrueTypeFont(font, true);
 		hiScore = getHiScore();
+		gameover = false;
+		name = "";
 	}
 	
 	public ICharacter getPlayer() {
@@ -118,10 +124,18 @@ public class GameField {
 		}
 		
 		// continue? screen
-		if (lives <= 0) {
+		if (lives <= 0 && !gameover && continued != GameplayState.QUIT) {
 			graphics.setColor(new Color(0, 0, 0, 192));
 			graphics.fillRect(0, 0, width, height);
 			continueButton.draw(200, 400);
+		}
+		
+		// Gameover/enter name screen
+		if (continued == GameplayState.QUIT) {
+			graphics.setColor(new Color(0, 0, 0, 192));
+			graphics.fillRect(0, 0, width, height);
+			enterName.draw(175, 400);
+			ttf.drawString(175, 475, name);
 		}
 		
 		// reset transformations and clips
@@ -148,6 +162,17 @@ public class GameField {
 		// moving avg for FPS
 		fps = (1000f / delta) * 0.2f + fps * 0.8f;
 		
+		// gameover check
+		if (continued == GameplayState.QUIT) {
+			if (gameover){
+				game.enterState(GauchoSpace.GAMEOVER);
+				writeScore();
+				reset();
+				continued = -1;
+			}
+			return;
+		}
+		
 		// cheats
 		if (gc.getInput().isKeyPressed(Input.KEY_I)) cheatInvincibility = !cheatInvincibility; 
 		
@@ -156,12 +181,6 @@ public class GameField {
 			if (continued == GameplayState.CONTINUED){
 				lives = 3;
 				score++;
-				continued = -1;
-			}
-			else if (continued == GameplayState.QUIT){
-				game.enterState(GauchoSpace.GAMEOVER);
-				writeScore();
-				reset();
 				continued = -1;
 			}
 			return;
@@ -219,9 +238,7 @@ public class GameField {
 					boss.tookDamage(bullet.getDamage());
 					score = score + 10;
 					if (boss.isDeletable()) {
-						game.enterState(GauchoSpace.GAMEOVER);
-						writeScore();
-						reset();
+						continued = GameplayState.QUIT;
 						return;
 					}
 				}
@@ -311,6 +328,8 @@ public class GameField {
 		yDisplacement = 0;
 		timer = 0.0f;
 		continued = -1;
+		gameover = false;
+		name = "";
 		hiScore = getHiScore();
 		try {
 			character = new TestPlayer(this);
@@ -325,7 +344,7 @@ public class GameField {
         try {
             ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
             ArrayList<ScoreRecord> scores = stl.loadScoreTable();
-            ScoreRecord sr = new ScoreRecord("aac", score);
+            ScoreRecord sr = new ScoreRecord(name, score);
             scores.add(sr);
             stl.saveScoreTable(scores);
             stl = null;
@@ -346,13 +365,26 @@ public class GameField {
     			hiScore = score.getPoints();
     		}
     	} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
     	return hiScore;
+    }
+    
+    public String getName(){
+    	return name;
+    }
+    
+    public int getNameLength(){
+    	return name.length();
+    }
+    
+    public void setName(String newName){
+    	name = newName;
+    }
+    
+    public void setGameOver() {
+    	gameover = true;
     }
 }
