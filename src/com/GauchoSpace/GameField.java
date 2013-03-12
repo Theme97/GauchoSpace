@@ -43,36 +43,54 @@ public class GameField {
 	private float fps;
 	private float yDisplacement;
 	private float timer;
-	private Font font;
 	private TrueTypeFont ttf;
 	private boolean cheatInvincibility;
 	private String name;
 	
-	public GameField() throws SlickException {
+	protected GameField() throws SlickException {
 		levelManager = new LevelManager(this);
 		character = new TestPlayer(this);
-		boss = null;
-		enemies = new Vector<ICharacter>();
-		playerBullets = new Vector<IBullet>();
-		enemyBullets = new Vector<IBullet>();
 		uiBackground = new Image("res/background_ui.png");
 		fieldBackground = new Image("res/background_field.jpg");
 		continueButton = new Image("res/continue.png");
 		enterName = new Image("res/nametext.png");
-		paused = false;
-		lives = 3;
-		score = 0;
+		ttf = new TrueTypeFont(new Font("Verdana", Font.BOLD, 30), true);
 		width = 858;
 		height = 1000;
-		fps = 0.0f;
+	}
+	
+	public void init(ICharacter character, ILevel level, int score) {
+		this.character = character;
+		this.score = score;
+		
+		levelManager.load(level);
+		
+		boss = null;
+		enemies = new Vector<ICharacter>();
+		playerBullets = new Vector<IBullet>();
+		enemyBullets = new Vector<IBullet>();
+		paused = false;
+		gameover = false;
+		continued = -1;
+		lives = 3;
+		score = 0;
+		hiScore = getHiScore();
 		yDisplacement = 0;
 		timer = 0.0f;
-		continued = -1;
-		font = new Font("Verdana", Font.BOLD, 30);
-		ttf = new TrueTypeFont(font, true);
-		hiScore = getHiScore();
-		gameover = false;
 		name = "";
+	}
+	
+	private static GameField instance = null;
+	
+	public static GameField getInstance() {
+		if (instance == null) {
+			try {
+				instance = new GameField();
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+		}
+		return instance;
 	}
 	
 	public ICharacter getPlayer() {
@@ -164,10 +182,9 @@ public class GameField {
 		
 		// gameover check
 		if (continued == GameplayState.QUIT) {
-			if (gameover){
+			if (gameover) {
 				game.enterState(GauchoSpace.GAMEOVER);
 				writeScore();
-				reset();
 				continued = -1;
 			}
 			return;
@@ -313,30 +330,6 @@ public class GameField {
 	
 	public int returnScore(){
 		return score;
-	}
-	
-	// Resets the gamefield
-	public void reset(){
-		boss = null;
-		enemies = new Vector<ICharacter>();
-		playerBullets = new Vector<IBullet>();
-		enemyBullets = new Vector<IBullet>();
-		lives = 3;
-		paused = false;
-		lives = 3;
-		score = 0;
-		yDisplacement = 0;
-		timer = 0.0f;
-		continued = -1;
-		gameover = false;
-		name = "";
-		hiScore = getHiScore();
-		try {
-			character = new TestPlayer(this);
-			levelManager = new LevelManager(this);
-		} catch (SlickException e) {
-			e.printStackTrace(); // TODO
-		}
 	}
 	
 	// Saves score to the save file

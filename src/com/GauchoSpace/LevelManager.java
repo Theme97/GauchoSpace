@@ -13,7 +13,14 @@ public class LevelManager {
 	
 	public LevelManager(GameField field) {
 		this.field = field;
-		level = new Level1();
+	}
+	
+	public void load(ILevel level) {
+		if (level != null) this.level = level;
+		ticks = 0;
+	}
+	
+	public void reset() {
 		ticks = 0;
 	}
 	
@@ -22,8 +29,10 @@ public class LevelManager {
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) {
-		level.update(field, this, ticks);
-		ticks++;
+		if (level != null) {
+			level.update(field, this, ticks);
+			ticks++;
+		}
 	}
 	
 	public int getTicks() {

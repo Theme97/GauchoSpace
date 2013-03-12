@@ -13,6 +13,9 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.Input;
 
+import com.GauchoSpace.Levels.Level1;
+import com.GauchoSpace.Players.TestPlayer;
+
 
 public class MainMenuState extends BasicGameState {
 	int stateID = 0;
@@ -42,8 +45,7 @@ public class MainMenuState extends BasicGameState {
 	}
 	
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
-			throws SlickException {
+	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException {
 		background = new Image("res/mainmenu.png");
 		playText = new Image("res/play.png");
 		statsText = new Image("res/scoreboardtext.png");
@@ -57,12 +59,10 @@ public class MainMenuState extends BasicGameState {
 		backgroundMusic = new Music("res/Undercover.ogg");
 		backgroundMusic.loop();
 		soundTracker = -1;
-		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void render(GameContainer gc, StateBasedGame game, Graphics graphics)
-			throws SlickException {
+	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) throws SlickException {
 		background.draw();
 
 		// changes alpha value of selector
@@ -87,9 +87,6 @@ public class MainMenuState extends BasicGameState {
 		} else if (selection == GauchoSpace.EXIT_STATE) {
 			selector.draw(50, 675);
 		}
-		
-		// TODO Auto-generated method stub
-		
 	}	
 	
 	@Override
@@ -123,13 +120,14 @@ public class MainMenuState extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer gc, StateBasedGame game, int delta)
-			throws SlickException {
-		// TODO Auto-generated method stub
+	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
 		if (optionSelected == GauchoSpace.GAMEPLAY) {
 			// enters mode selection if not yet there
 			// otherwise enters gameplay mode
 			if (gameModeSelection == 1) {
+				GameField field = GameField.getInstance();
+				field.init(new TestPlayer(field), new Level1(), 0);
+				
 				game.enterState(GauchoSpace.GAMEPLAY);
 				backgroundMusic.stop();
 			}

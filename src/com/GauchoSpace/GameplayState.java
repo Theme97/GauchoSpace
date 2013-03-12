@@ -26,7 +26,7 @@ public class GameplayState extends BasicGameState {
 		super();
 		this.stateID = state;
 
-		field = new GameField();
+		field = GameField.getInstance();
 	}
 
 	@Override
