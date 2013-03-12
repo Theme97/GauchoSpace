@@ -10,7 +10,6 @@ import org.newdawn.slick.Music;
 
 import com.GauchoSpace.Enemy;
 import com.GauchoSpace.GameField;
-import com.GauchoSpace.IBullet;
 import com.GauchoSpace.ILevel;
 import com.GauchoSpace.LevelManager;
 import com.GauchoSpace.UpdateHandler;
@@ -18,7 +17,6 @@ import com.GauchoSpace.Bullets.*;
 import com.GauchoSpace.Motion.Bezier;
 import com.GauchoSpace.Motion.CatmullRom;
 import com.GauchoSpace.Motion.Lerp;
-import com.GauchoSpace.Motion.Path;
 
 public class Level1 implements ILevel {
 	private Music backgroundMusic;

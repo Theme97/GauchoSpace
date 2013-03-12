@@ -46,7 +46,10 @@ public class GameField {
 	private TrueTypeFont ttf;
 	private boolean cheatInvincibility;
 	private String name;
-	
+
+	/* ------------ *
+	 * Constructors *
+	 * ------------ */
 	protected GameField() throws SlickException {
 		levelManager = new LevelManager(this);
 		character = new TestPlayer(this);
@@ -58,13 +61,13 @@ public class GameField {
 		width = 858;
 		height = 1000;
 	}
-	
+
 	public void init(ICharacter character, ILevel level, int score) {
 		this.character = character;
 		this.score = score;
-		
+
 		levelManager.load(level);
-		
+
 		boss = null;
 		enemies = new Vector<ICharacter>();
 		playerBullets = new Vector<IBullet>();
@@ -79,9 +82,12 @@ public class GameField {
 		timer = 0.0f;
 		name = "";
 	}
-	
+
+	/* --------- *
+	 * Singleton *
+	 * --------- */
 	private static GameField instance = null;
-	
+
 	public static GameField getInstance() {
 		if (instance == null) {
 			try {
@@ -92,62 +98,128 @@ public class GameField {
 		}
 		return instance;
 	}
-	
-	public ICharacter getPlayer() {
-		return character;
+
+	/* ----------------- *
+	 * Getters & Setters *
+	 * ----------------- */
+	// getters
+	public ICharacter getPlayer() { return character; }
+	public int getWidth() { return width; }
+	public int getHeight() { return height; }
+	public int getTicks() { return levelManager.getTicks(); }
+	public Collection<IBullet> getPlayerBullets() { return playerBullets; }
+	public Collection<IBullet> getEnemyBullets() { return enemyBullets; }
+	public int returnContinued() { return continued; }
+	public int returnLives() { return lives; }
+	public int returnScore() { return score; }
+
+	private int getHiScore() {
+		int hiScore = 0;
+		try {
+			ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
+			ArrayList<ScoreRecord> scores = stl.loadScoreTable();
+			if (!scores.isEmpty()) {
+				ScoreRecord score = scores.get(0);
+				hiScore = score.getPoints();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return hiScore;
 	}
-	
-	public int getWidth() {
-		return width;
+
+	public String getName() { return name; }
+	public int getNameLength() { return name.length(); }
+
+	// setters
+	public void addEnemy(ICharacter enemy) {
+		enemies.add(enemy);
 	}
-	
-	public int getHeight() {
-		return height;
+
+	public void setBoss(ICharacter boss) {
+		this.boss = boss;
 	}
-	
-	public int getTicks() {
-		return levelManager.getTicks();
+
+	public void addPlayerBullet(IBullet bullet) {
+		playerBullets.add(bullet);
 	}
-	
+
+	public void addEnemyBullet(IBullet bullet) {
+		enemyBullets.add(bullet);
+	}
+
+	public void changeContinued(int value) {
+		continued = value;
+	}
+
+	// Saves score to the save file
+	private void writeScore() {
+		try {
+			ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
+			ArrayList<ScoreRecord> scores = stl.loadScoreTable();
+			ScoreRecord sr = new ScoreRecord(name, score);
+			scores.add(sr);
+			stl.saveScoreTable(scores);
+			stl = null;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setName(String newName) {
+		name = newName;
+	}
+
+	public void setGameOver() {
+		gameover = true;
+	}
+
+	/* -------- *
+	 * render() *
+	 * -------- */
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
 		// scale resolution
 		//graphics.scale(0.5f, 0.5f);
-		
+
 		// draw UI background
 		uiBackground.draw();
-		
+
 		// prep playing field
 		graphics.translate(12, 12);
 		graphics.setWorldClip(0, 0, width, height);
-		
+
 		// draw field background
 		//fieldBackground.draw();
-		
+
 		// draw animated background
 		graphics.drawImage(fieldBackground, -550, yDisplacement);
 		graphics.drawImage(fieldBackground, -550, yDisplacement - fieldBackground.getHeight());
 		if (yDisplacement >= fieldBackground.getHeight()) yDisplacement = 0;
-		
+
 		// render order: enemies, boss, player, player bullets, enemy bullets
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
 		if (boss != null) boss.render(gc, game, graphics);
 		character.render(gc, game, graphics);
 		for (IBullet bullet : playerBullets) bullet.render(gc, game, graphics);
 		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
-		
+
 		// pause screen
 		if (paused) {
 			graphics.setColor(new Color(0, 0, 0, 192));
 			graphics.fillRect(0, 0, width, height);
 		}
-		
+
 		// continue? screen
 		if (lives <= 0 && !gameover && continued != GameplayState.QUIT) {
 			graphics.setColor(new Color(0, 0, 0, 192));
 			graphics.fillRect(0, 0, width, height);
 			continueButton.draw(200, 400);
 		}
-		
+
 		// Gameover/enter name screen
 		if (continued == GameplayState.QUIT) {
 			graphics.setColor(new Color(0, 0, 0, 192));
@@ -155,11 +227,11 @@ public class GameField {
 			enterName.draw(175, 400);
 			ttf.drawString(175, 475, name);
 		}
-		
+
 		// reset transformations and clips
 		graphics.resetTransform();
 		graphics.clearWorldClip();
-		
+
 		// draw UI
 		graphics.setColor(Color.white);
 		if (hiScore >= score)	ttf.drawString(1125, 142, "" + hiScore); 
@@ -167,19 +239,22 @@ public class GameField {
 		ttf.drawString(1078, 192, "" + score);
 		//ttf.drawString(1065, 192, "" + (int)Math.floor(timer / 1000));
 		ttf.drawString(1055, 292, "" + lives);
-		
+
 		// cheats
 		if (cheatInvincibility) graphics.drawString("Invincibility ON", 900, 500);
-		
+
 		// ghetto debug/FPS counters
 		graphics.drawString("blt: " + enemyBullets.size() + "\n   : " + playerBullets.size(), 1080, 976);
 		graphics.drawString(String.format("gfx: %d\nfps: %.2f", gc.getFPS(), fps), 1180, 976);
 	}
 
+	/* -------- *
+	 * update() *
+	 * -------- */
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		// moving avg for FPS
 		fps = (1000f / delta) * 0.2f + fps * 0.8f;
-		
+
 		// gameover check
 		if (continued == GameplayState.QUIT) {
 			if (gameover) {
@@ -189,10 +264,10 @@ public class GameField {
 			}
 			return;
 		}
-		
+
 		// cheats
 		if (gc.getInput().isKeyPressed(Input.KEY_I)) cheatInvincibility = !cheatInvincibility; 
-		
+
 		// continue screen check
 		if (lives <= 0) {
 			if (continued == GameplayState.CONTINUED){
@@ -202,38 +277,38 @@ public class GameField {
 			}
 			return;
 		}
-		
+
 		// pause check
 		boolean pauseToggle = gc.getInput().isKeyPressed(Input.KEY_ESCAPE);
 		if (pauseToggle) paused = !paused;
-		
+
 		if (paused) return;
-		
+
 		// updates background and timer
 		yDisplacement = yDisplacement + 1f;
 		timer += delta;
-		
+
 		// update level
 		levelManager.update(gc, game, delta);
-		
+
 		// move character
 		character.update(gc, game, delta);
 		boolean checkCollisions = !cheatInvincibility && !character.getInvincibility();
-		
+
 		// move enemies
 		if (boss != null) boss.update(gc, game, delta);
 		for (ICharacter enemy : enemies) enemy.update(gc, game, delta);
-		
+
 		// move bullets
 		Iterator<IBullet> i;
 		Iterator<ICharacter> j;
-		
+
 		// - 1: player bullets
 		i = playerBullets.iterator();
 		while (i.hasNext()) {
 			IBullet bullet = i.next();
 			bullet.update(gc, game, delta);
-			
+
 			// first, general enemies
 			j = enemies.iterator();
 			while (j.hasNext()) {
@@ -243,12 +318,12 @@ public class GameField {
 					score = score + 10;
 				}
 			}
-			
+
 			if (bullet.isDeletable()) {
 				i.remove();
 				continue;
 			}
-			
+
 			// next, boss
 			if (boss != null) {
 				if (bullet.isColliding(boss)) {
@@ -261,13 +336,13 @@ public class GameField {
 				}
 			}
 		}
-		
+
 		// - 2: enemy bullets
 		i = enemyBullets.iterator();
 		while (i.hasNext()) {
 			IBullet bullet = i.next();
 			bullet.update(gc, game, delta);
-			
+
 			if (bullet.isDeletable()) {
 				i.remove();
 			} else if (checkCollisions && bullet.isColliding(character)) {
@@ -285,99 +360,10 @@ public class GameField {
 				 }*/
 			}
 		}
-		
+
 		// clean up enemies
 		for (j = enemies.iterator(); j.hasNext();)
 			if (j.next().isDeletable())
 				j.remove();
 	}
-	
-	public void addEnemy(ICharacter enemy) {
-		enemies.add(enemy);
-	}
-	
-	public void setBoss(ICharacter boss) {
-		this.boss = boss;
-	}
-	
-	public void addPlayerBullet(IBullet bullet) {
-		playerBullets.add(bullet);
-	}
-	
-	public Collection<IBullet> getPlayerBullets() {
-		return playerBullets;
-	}
-	
-	public void addEnemyBullet(IBullet bullet) {
-		enemyBullets.add(bullet);
-	}
-	
-	public Collection<IBullet> getEnemyBullets() {
-		return enemyBullets;
-	}
-	
-	public int returnContinued(){
-		return continued;
-	}
-	
-	public int returnLives(){
-		return lives;
-	}
-	
-	public void changeContinued(int value){
-		continued = value;
-	}
-	
-	public int returnScore(){
-		return score;
-	}
-	
-	// Saves score to the save file
-    private void writeScore() {
-        try {
-            ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
-            ArrayList<ScoreRecord> scores = stl.loadScoreTable();
-            ScoreRecord sr = new ScoreRecord(name, score);
-            scores.add(sr);
-            stl.saveScoreTable(scores);
-            stl = null;
-        } catch (FileNotFoundException e) {
-        	e.printStackTrace();
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
-    }
-    
-    private int getHiScore(){
-    	int hiScore = 0;
-    	try{
-    		ScoreTableLoader stl = new ScoreTableLoader("scores.txt");
-    		ArrayList<ScoreRecord> scores = stl.loadScoreTable();
-    		if (!scores.isEmpty()){
-    			ScoreRecord score = scores.get(0);
-    			hiScore = score.getPoints();
-    		}
-    	} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    	return hiScore;
-    }
-    
-    public String getName(){
-    	return name;
-    }
-    
-    public int getNameLength(){
-    	return name.length();
-    }
-    
-    public void setName(String newName){
-    	name = newName;
-    }
-    
-    public void setGameOver() {
-    	gameover = true;
-    }
 }
