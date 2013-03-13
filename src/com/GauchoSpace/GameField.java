@@ -29,7 +29,6 @@ public class GameField {
 	private Collection<IBullet> playerBullets;
 	private Collection<IBullet> enemyBullets;
 	private Image uiBackground;
-	private Image fieldBackground;
 	private Image continueButton;
 	private Image enterName;
 	private boolean paused;
@@ -41,7 +40,6 @@ public class GameField {
 	private int width;
 	private int height;
 	private float fps;
-	private float yDisplacement;
 	private float timer;
 	private TrueTypeFont ttf;
 	private boolean cheatInvincibility;
@@ -54,7 +52,6 @@ public class GameField {
 		levelManager = new LevelManager(this);
 		character = new TestPlayer(this);
 		uiBackground = new Image("res/background_ui.png");
-		fieldBackground = new Image("res/background_field.jpg");
 		continueButton = new Image("res/continue.png");
 		enterName = new Image("res/nametext.png");
 		ttf = new TrueTypeFont(new Font("Verdana", Font.BOLD, 30), true);
@@ -78,7 +75,6 @@ public class GameField {
 		lives = 3;
 		score = 0;
 		hiScore = getHiScore();
-		yDisplacement = 0;
 		timer = 0.0f;
 		name = "";
 	}
@@ -192,14 +188,6 @@ public class GameField {
 		graphics.translate(12, 12);
 		graphics.setWorldClip(0, 0, width, height);
 
-		// draw field background
-		//fieldBackground.draw();
-
-		// draw animated background
-		graphics.drawImage(fieldBackground, -550, yDisplacement);
-		graphics.drawImage(fieldBackground, -550, yDisplacement - fieldBackground.getHeight());
-		if (yDisplacement >= fieldBackground.getHeight()) yDisplacement = 0;
-
 		// render order: enemies, boss, player, player bullets, enemy bullets
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
 		if (boss != null) boss.render(gc, game, graphics);
@@ -283,8 +271,7 @@ public class GameField {
 
 		if (paused) return;
 
-		// updates background and timer
-		yDisplacement = yDisplacement + 1f;
+		// updates timer
 		timer += delta;
 
 		// update level

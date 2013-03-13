@@ -20,22 +20,27 @@ import com.GauchoSpace.Motion.Lerp;
 
 public class Level1 implements ILevel {
 	private Music backgroundMusic;
+	private Image backgroundImage;
+	private int backgroundImageDisplacement;
+	
+	public Level1() {
+		try {
+			backgroundMusic = new Music("res/Intersektion.ogg");
+			backgroundImage = new Image("res/background_field.jpg");
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Override
 	public void update(GameField field, LevelManager manager, int ticks) {
-		// set up player
+		// init
 		if (ticks == 0) {
+			// set up player
 			field.getPlayer().setPos(new Vector2f(field.getWidth() / 2, field.getHeight() - 50));
-		}
-		
-		// plays background music
-		if (ticks == 0){
-			try {
-				backgroundMusic = new Music("res/Intersektion.ogg");
-				backgroundMusic.loop();
-			} catch (SlickException e) {
-				e.printStackTrace();
-			}
+			
+			// play bg music
+			backgroundMusic.loop();
 		}
 		
 		// first wave
