@@ -73,14 +73,14 @@ public class TestPlayer implements ICharacter {
 	@Override
 	public void tookDamage(int damage) {
 		deathPosition = pos.copy();
-		ticksToRevival = 360;
+		ticksToRevival = 180;
 		invincible = true;
 	}
 	
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
-		if (ticksToRevival > 240) {
-			int radius = (360 - ticksToRevival) * 10;
+		if (ticksToRevival > 120) {
+			int radius = (180 - ticksToRevival) * 20;
 			graphics.setColor(Color.white);
 			graphics.drawArc(deathPosition.x - radius, deathPosition.y - radius, radius * 2, radius * 2, 0, 360);
 			return;
@@ -110,8 +110,8 @@ public class TestPlayer implements ICharacter {
 				if ((ticksToRevival % 8) > 4) sprite.setAlpha(.4f);
 				else sprite.setAlpha(1f);
 			}
-			if (ticksToRevival > 240) {
-				int radius = (360 - ticksToRevival) * 10;
+			if (ticksToRevival > 120) {
+				int radius = (180 - ticksToRevival) * 20;
 				Iterator<IBullet> i = field.getEnemyBullets().iterator();
 				while (i.hasNext()) {
 					IBullet bullet = i.next();
@@ -120,8 +120,8 @@ public class TestPlayer implements ICharacter {
 					}
 				}
 				return;
-			} else if (ticksToRevival > 180) {
-				pos = new Vector2f(field.getWidth() / 2, field.getHeight() - (240 - ticksToRevival) * 3);
+			} else if (ticksToRevival > 60) {
+				pos = new Vector2f(field.getWidth() / 2, field.getHeight() - (120 - ticksToRevival) * 3);
 				return;
 			} else if (ticksToRevival == 0) {
 				invincible = false;

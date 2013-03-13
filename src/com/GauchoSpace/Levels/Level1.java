@@ -213,4 +213,9 @@ class TestBoss extends Enemy {
 			field.addEnemyBullet(new AcceleratedBullet(field, pos.x, pos.y, 8, -0.1f, ticks * 3 + 182, 10, 5, Color.blue));
 		}
 	}
+	
+	@Override
+	public boolean isDeletable() {
+		return getHealth() <= 0;
+	}
 }
