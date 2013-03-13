@@ -36,7 +36,7 @@ public class GameOverState extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
 		if (exit)
-			game.enterState(GauchoSpace.MAIN_MENU,
+			game.enterState(GauchoSpace.SCORE_STATE,
 					new FadeOutTransition(Color.black),
 					new FadeInTransition(Color.black));
 	}
