@@ -88,4 +88,13 @@ public class LinearBullet implements IBullet {
 	public Vector2f getPos() {
 		return pos.copy();
 	}
+
+	@Override
+	public void onCollision(ICharacter target) {
+		deletable = true;
+	}
+
+	@Override
+	public void destroy() {
+	}
 }

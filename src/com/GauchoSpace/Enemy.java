@@ -114,4 +114,8 @@ public class Enemy implements ICharacter {
 	public boolean isDeletable() {
 		return health <= 0;
 	}
+
+	@Override
+	public void destroy() {
+	}
 }

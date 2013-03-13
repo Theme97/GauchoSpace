@@ -11,6 +11,9 @@ public interface IBullet {
 	public boolean isDeletable();
 	public boolean isColliding(ICharacter character);
 	
+	public void onCollision(ICharacter target);
+	public void destroy();
+	
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics);
 	public void update(GameContainer gc, StateBasedGame game, int delta);
 }

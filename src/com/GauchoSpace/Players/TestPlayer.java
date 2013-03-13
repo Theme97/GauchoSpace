@@ -165,6 +165,10 @@ public class TestPlayer implements ICharacter {
 	public boolean isDeletable() {
 		return false;
 	}
+
+	@Override
+	public void destroy() {
+	}
 }
 
 class PlayerBullet1 implements IBullet {
@@ -218,5 +222,14 @@ class PlayerBullet1 implements IBullet {
 	@Override
 	public Vector2f getPos() {
 		return pos.copy();
+	}
+
+	@Override
+	public void onCollision(ICharacter target) {
+		deletable = true;
+	}
+
+	@Override
+	public void destroy() {
 	}
 }

@@ -234,11 +234,10 @@ public class GameField {
 
 		// draw UI
 		graphics.setColor(Color.white);
-		if (hiScore >= score)	ttf.drawString(1125, 142, "" + hiScore); 
-		else	ttf.drawString(1125, 142, "" + score);
-		ttf.drawString(1078, 192, "" + score);
+		ttf.drawString(1125, 142, Integer.toString((score > hiScore) ? score : hiScore)); 
+		ttf.drawString(1078, 192, Integer.toString(score));
 		//ttf.drawString(1065, 192, "" + (int)Math.floor(timer / 1000));
-		ttf.drawString(1055, 292, "" + lives);
+		ttf.drawString(1055, 292, Integer.toString(lives));
 
 		// cheats
 		if (cheatInvincibility) graphics.drawString("Invincibility ON", 900, 500);
@@ -314,26 +313,30 @@ public class GameField {
 			while (j.hasNext()) {
 				ICharacter enemy = j.next();
 				if (bullet.isColliding(enemy)) {
+					score += 10;
+					bullet.onCollision(enemy);
 					enemy.tookDamage(bullet.getDamage());
-					score = score + 10;
+					
+					if (bullet.isDeletable()) break;
 				}
 			}
 
-			if (bullet.isDeletable()) {
-				i.remove();
-				continue;
-			}
-
 			// next, boss
-			if (boss != null) {
+			if (boss != null && !bullet.isDeletable()) {
 				if (bullet.isColliding(boss)) {
+					score += 10;
+					bullet.onCollision(boss);
 					boss.tookDamage(bullet.getDamage());
-					score = score + 10;
 					if (boss.isDeletable()) {
 						continued = GameplayState.QUIT;
 						return;
 					}
 				}
+			}
+			
+			if (bullet.isDeletable()) {
+				bullet.destroy();
+				i.remove();
 			}
 		}
 
@@ -343,27 +346,30 @@ public class GameField {
 			IBullet bullet = i.next();
 			bullet.update(gc, game, delta);
 
-			if (bullet.isDeletable()) {
-				i.remove();
-			} else if (checkCollisions && bullet.isColliding(character)) {
-				// handle player collision
-				if (lives > 0) lives --;
-				character.tookDamage(bullet.getDamage());
-				i.remove();
-				/*if (lives <= 0) {
-					game.enterState(GauchoSpace.GAMEOVER);
-					reset();
-					return;
-				} else {
+			if (!bullet.isDeletable()) {
+				if (checkCollisions && bullet.isColliding(character)) {
+					// handle player collision
+					if (lives > 0) lives --;
+					bullet.onCollision(character);
 					character.tookDamage(bullet.getDamage());
-					i.remove();
-				 }*/
+				}
+			}
+			
+			if (bullet.isDeletable()) {
+				bullet.destroy();
+				i.remove();
 			}
 		}
 
 		// clean up enemies
-		for (j = enemies.iterator(); j.hasNext();)
-			if (j.next().isDeletable())
+		j = enemies.iterator();
+		while (j.hasNext()) {
+			ICharacter enemy = j.next();
+			if (enemy.isDeletable()) {
+				score += 100;
+				enemy.destroy();
 				j.remove();
+			}
+		}
 	}
 }
