@@ -112,7 +112,7 @@ public class Enemy implements ICharacter {
 
 	@Override
 	public boolean isDeletable() {
-		return health <= 0;
+		return (health <= 0) || (motion == null);
 	}
 
 	@Override
