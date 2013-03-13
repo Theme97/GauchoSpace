@@ -17,7 +17,7 @@ public class BossManager {
 	private int attackTicks;
 	private long attackTimeStart;
 	
-	private final Color uiColor = new Color(192, 192, 192);
+	private final Color uiColor = new Color(216, 216, 216);
 	
 	public void setBoss(ICharacter boss) {
 		this.boss = boss;
