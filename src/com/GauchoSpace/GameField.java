@@ -255,8 +255,20 @@ public class GameField {
 		}
 
 		// cheats
-		if (gc.getInput().isKeyPressed(Input.KEY_I)) cheatInvincibility = !cheatInvincibility; 
-
+		Input input = gc.getInput();
+		
+		if (input.isKeyPressed(Input.KEY_I)) cheatInvincibility = !cheatInvincibility; 
+		
+		// TODO fullscreen
+		if (input.isKeyPressed(Input.KEY_F5)) {
+			try {
+				gc.setFullscreen(!gc.isFullscreen());
+			} catch (SlickException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		// continue screen check
 		if (lives <= 0) {
 			if (continued == GameplayState.CONTINUED){
