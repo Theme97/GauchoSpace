@@ -59,7 +59,10 @@ public class BossManager {
 			graphics.setColor(uiColor);
 			graphics.fillRect(20, 8, 798 * (float)boss.getHealth() / maxLife, 4);
 			graphics.drawString(Integer.toString(timeout - attackTicks / 60), 832, 2);
-			graphics.drawString("Bonus: " + (int)Math.floor(bonusPoints * 10), 710, 22);
+			if (bonusPoints > 0)
+				graphics.drawString("Bonus: " + (int)Math.floor(bonusPoints * 10), 710, 22);
+			else
+				graphics.drawString("Bonus: Failed", 710, 22);
 		}
 	}
 	
@@ -68,7 +71,7 @@ public class BossManager {
 			boss.update(gc, game, delta);
 			
 			attackTicks++;
-			bonusPoints -= bonusDecay;
+			if (bonusPoints > 0) bonusPoints -= bonusDecay;
 		}
 	}
 }

@@ -353,8 +353,9 @@ public class GameField {
 			if (!bullet.isDeletable()) {
 				if (checkCollisions && bullet.isColliding(character)) {
 					// handle player collision
-					if (lives > 0) lives --;
+					if (lives > 0) lives--;
 					bullet.onCollision(character);
+					bossManager.setBonusPoints(0);
 					character.tookDamage(bullet.getDamage());
 				}
 			}
