@@ -32,6 +32,9 @@ public class monochrome implements ILevel {
 	private long time;
 	private Queue<TimedAction> actions;
 	private double nextActionTime;
+	
+	private int backgroundDisplacement;
+	private boolean freeze;
 
 	// pulse vars
 	private int leftPulseTicks;
@@ -83,6 +86,7 @@ public class monochrome implements ILevel {
 			topPulseImage = bottomPulseImage.getFlippedCopy(false, true);
 
 			resources = new ResourceHandler();
+			resources.put("background", "res/background_field.jpg");
 			resources.put("bg01", "res/monochrome/bg/01.png");
 			resources.put("bg02", "res/monochrome/bg/02.png");
 			resources.put("bg03", "res/monochrome/bg/03.png");
@@ -92,6 +96,7 @@ public class monochrome implements ILevel {
 			resources.put("bg07", "res/monochrome/bg/07.png");
 			resources.put("bg08", "res/monochrome/bg/08.png");
 			resources.put("bg09", "res/monochrome/bg/09.png");
+			resources.put("bg99", "res/monochrome/bg/99.png");
 
 			resources.put("ring", "res/monochrome/ring.png");
 
@@ -472,7 +477,7 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 46.827 + 1.286, synthPattern(0)));
 		actions.add(new TimedAction( 46.827 + 1.500, synthPattern(1)));
 
-		// ?
+		// 29
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 4; j++) {
 				actions.add(new TimedAction(48.759 + 0.1026 * (i * 4 + j), j % 2 == 0 ? showBuildup : hideBuildup));
@@ -483,11 +488,42 @@ public class monochrome implements ILevel {
 		//actions.add(new TimedAction( 48.973, showBuildup));
 		//actions.add(new TimedAction( 49.060, hideBuildup));
 		
+		actions.add(new TimedAction( 48.759        , synthPattern(2)));
+		actions.add(new TimedAction( 48.759 + 0.321, synthPattern(3)));
+		actions.add(new TimedAction( 48.759 + 0.643, synthPattern(4)));
+		actions.add(new TimedAction( 48.759 + 0.964, synthPattern(5)));
+		actions.add(new TimedAction( 48.759 + 1.286, synthPattern(0)));
+		actions.add(new TimedAction( 48.759 + 1.500, synthPattern(1)));
+		
+		// 30
+		actions.add(new TimedAction( 50.251        , synthPattern(2)));
+		actions.add(new TimedAction( 50.251 + 0.321, synthPattern(3)));
+		actions.add(new TimedAction( 50.251 + 0.643, synthPattern(4)));
+		actions.add(new TimedAction( 50.251 + 0.964, synthPattern(5)));
+		actions.add(new TimedAction( 50.251 + 1.286, synthPattern(0)));
+		actions.add(new TimedAction( 50.251 + 1.500, synthPattern(1)));
+		
+		// 31
+		actions.add(new TimedAction( 51.956        , synthPattern(2)));
+		actions.add(new TimedAction( 51.956 + 0.321, synthPattern(3)));
+		actions.add(new TimedAction( 51.956 + 0.643, synthPattern(4)));
+		actions.add(new TimedAction( 51.956 + 0.964, synthPattern(5)));
+		//actions.add(new TimedAction( 51.956 + 1.286, synthPattern(0)));
+		//actions.add(new TimedAction( 51.956 + 1.500, synthPattern(1)));
+		
 		// ?
+		actions.add(new TimedAction( 53.684, new Action() {
+			@Override
+			public void perform(GameField field) { freeze = true; }
+		}));
 		actions.add(new TimedAction( 53.684, showBuildup));
 		actions.add(new TimedAction( 53.684, stopBuildup));
 		actions.add(new TimedAction( 53.684, enableGrayscale));
 
+		actions.add(new TimedAction( 55.397, new Action() {
+			@Override
+			public void perform(GameField field) { freeze = false; }
+		}));
 		actions.add(new TimedAction( 55.397, disableGrayscale));
 
 		// done!
@@ -500,6 +536,11 @@ public class monochrome implements ILevel {
 		if (ticks == 0) {
 		}
 
+		// scroll background
+		if (!freeze) {
+			backgroundDisplacement += 1;
+		}
+		
 		// delay
 		if (ticks < 60) {
 			return;
@@ -556,15 +597,34 @@ public class monochrome implements ILevel {
 	public void renderBackground(GameField field, LevelManager manager, Graphics graphics) {
 		float elapsedTime = (float)(System.currentTimeMillis() - time) * 0.001f;
 
+		// enable shader
+		if (grayscale) shader.use(true);
+		
+		// background TODO
+		Image background = resources.get("background");
+		graphics.setClip(12, 12, 858, 1000);
+		graphics.drawImage(background, -550, backgroundDisplacement);
+		graphics.drawImage(background, -550, backgroundDisplacement - background.getHeight());
+		if (backgroundDisplacement >= background.getHeight()) backgroundDisplacement = 0;
+		graphics.clearClip();
+		
+		// images
 		drawLevelImage(graphics, "bg01", elapsedTime,  0.540f,  7.097f, 150, 150,  5,  7); // Group 14 Presents
 		drawLevelImage(graphics, "bg02", elapsedTime,  7.097f, 14.254f,  30, 500,  3,  7); // monochrome
+		
 		drawLevelImage(graphics, "bg03", elapsedTime, 13.954f, 20.254f, 200, 160,  5,  5); // 振りほどいて
 		drawLevelImage(graphics, "bg04", elapsedTime, 15.670f, 21.112f, 440, 380, -5,  5); // 振りほどいて
 		drawLevelImage(graphics, "bg05", elapsedTime, 17.180f, 21.970f, 310, 570,  5, -5); // なみだの渦
 		drawLevelImage(graphics, "bg06", elapsedTime, 19.096f, 22.828f, 430, 790, -5, -5); // 飲み込まれて
+		
 		drawLevelImage(graphics, "bg07", elapsedTime, 20.812f, 27.562f, 285, 315,  5,  5); // どんなにただ
-		drawLevelImage(graphics, "bg08", elapsedTime, 22.526f, 28.420f, 420, 500,  0,  5); // 願おうとも
+		drawLevelImage(graphics, "bg08", elapsedTime, 22.526f, 28.420f, 420, 500, -3,  5); // 願おうとも
 		drawLevelImage(graphics, "bg09", elapsedTime, 24.034f, 29.278f, 300, 770,  3, -5); // 響かない歌声
+		
+		//drawLevelImage(graphics, "bg10", elapsedTime, 34.524f, 41.078f, 200, 160,  5,  5); // 此処にいるの
+		//drawLevelImage(graphics, "bg11", elapsedTime, 36.234f, 41.078f, 440, 380, -5,  5); // 何処にいても
+		//drawLevelImage(graphics, "bg12", elapsedTime, 37.841f, 29.278f, 310, 570,  5, -5); // 誰でも
+		//drawLevelImage(graphics, "bg13", elapsedTime, 24.034f, 29.278f, 430, 790, -5, -5); // 良いんだから
 
 		if (grayscaleRing > 0) {
 			resources.get("ring").draw(429 - grayscaleRing, 500 - grayscaleRing, (float)grayscaleRing / 512);
@@ -575,9 +635,6 @@ public class monochrome implements ILevel {
 				grayscaleRing += 12;
 			}
 		}
-
-		// enable shader
-		if (grayscale) shader.use(true);
 	}
 
 	@Override
@@ -611,6 +668,11 @@ public class monochrome implements ILevel {
 
 		// disable shader
 		if (grayscale) shader.use(false);
+		
+		// 優しくしないで
+		if (freeze) {
+			graphics.drawImage(resources.get("bg99"), 100, 650);
+		}
 	}
 
 	/* ------- *
