@@ -36,7 +36,7 @@ public class TestPlayer implements ICharacter {
 	
 	public TestPlayer(GameField field) throws SlickException {
 		this.field = field;
-		sprite = new Image("res/char_test.png");
+		sprite = new Image("res/playership.png");
 		invincible = false;
 		slow = false;
 		pos = new Vector2f();

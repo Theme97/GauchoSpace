@@ -58,9 +58,8 @@ public class Level1 implements ILevel {
 			points.add(new Vector2f(429, 700));
 			points.add(new Vector2f(-20, 700));
 			points.add(new Vector2f(-479, 700));
-			
 			try {
-				Enemy enemy = new TestEnemy2(field, new Image("res/enemy_test.png"), 20, 50);
+				Enemy enemy = new TestEnemy2(field, new Image("res/enship.png"), 20, 50);
 				enemy.setMotion(new CatmullRom(points, 300));
 				field.addEnemy(enemy);
 			} catch (SlickException e) {
@@ -71,7 +70,7 @@ public class Level1 implements ILevel {
 		// second wave
 		if (ticks > 420 && ticks <= 570 && ticks % 30 == 0) {
 			try {
-				Enemy enemy = new TestEnemy(field, new Image("res/enemy_test.png"), 20, 15);
+				Enemy enemy = new TestEnemy(field, new Image("res/babyship.png"), 20, 15);
 				enemy.setMotion(new Lerp(-20, 100, field.getWidth() + 20, 100, 300));
 				field.addEnemy(enemy);
 			} catch (SlickException e) {
@@ -89,7 +88,7 @@ public class Level1 implements ILevel {
 				points.add(new Vector2f(205, 1000));
 				points.add(new Vector2f(-20, 500));
 				
-				Enemy enemy = new TestEnemy(field, new Image("res/enemy_test.png"), 20, 15);
+				Enemy enemy = new TestEnemy(field, new Image("res/babyship.png"), 20, 15);
 				enemy.setMotion(new Bezier(points, 300));
 				field.addEnemy(enemy);
 			} catch (SlickException e) {
@@ -98,9 +97,9 @@ public class Level1 implements ILevel {
 		}
 		
 		// boss
-		if (ticks == 1000) {
+		if (ticks == 1200) {
 			try {
-				Enemy enemy = new TestBoss(field, new Image("res/enemy_test.png"), 20, 200);
+				Enemy enemy = new TestBoss(field, new Image("res/bigboy.png"), 50, 200);
 				enemy.setMotion(new Lerp(429, -20, 429, 300, 120));
 				field.setBoss(enemy);
 			} catch (SlickException e) {
