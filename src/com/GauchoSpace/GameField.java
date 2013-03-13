@@ -298,9 +298,21 @@ public class GameField {
 		character.update(gc, game, delta);
 		boolean checkCollisions = !cheatInvincibility && !character.getInvincibility();
 
-		// move enemies
+		// move boss
 		bossManager.update(gc, game, delta);
-		for (ICharacter enemy : enemies) enemy.update(gc, game, delta);
+		
+		// update enemies
+		{
+			Iterator<ICharacter> i = enemies.iterator();
+			while (i.hasNext()) {
+				ICharacter enemy = i.next();
+				enemy.update(gc, game, delta);
+				if (enemy.isDeletable()) {
+					enemy.destroy();
+					i.remove();
+				}
+			}
+		}
 
 		// move bullets
 		Iterator<IBullet> i;
@@ -366,7 +378,7 @@ public class GameField {
 			}
 		}
 
-		// clean up enemies
+		// clean up dead enemies
 		j = enemies.iterator();
 		while (j.hasNext()) {
 			ICharacter enemy = j.next();
