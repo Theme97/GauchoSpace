@@ -1,5 +1,6 @@
 package com.GauchoSpace;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -7,6 +8,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.Image;
 
 public class GameplayState extends BasicGameState {
@@ -21,6 +24,8 @@ public class GameplayState extends BasicGameState {
 
 	public final static int CONTINUED = 1;
 	public final static int QUIT = 2;
+	public final static int RESUME = 3;
+	public final static int FORCEDQUIT = 4;
 
 	public GameplayState(int state) throws SlickException {
 		super();
@@ -47,31 +52,65 @@ public class GameplayState extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) throws SlickException {
 		field.render(gc, game, graphics);
-		if (selection == CONTINUED)
-			selector.draw(220, 490);
-		else if (selection == QUIT) 
-			selector.draw(455, 490);
+		switch (selection) {
+			case CONTINUED:
+				selector.draw(220, 490);
+				break;
+			case QUIT:
+				selector.draw(455, 490);
+				break;
+			case RESUME:
+				selector.draw(225, 520, 225, 75);
+				break;
+			case FORCEDQUIT:
+				selector.draw(565, 520);
+				break;
+		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
 		field.update(gc, game, delta);
 		// used for continue screen buttons
-		if (optionSelected == CONTINUED){
-			selection = -1;
-			field.changeContinued(CONTINUED);
-			optionSelected = -1;
-		}
-		else if (optionSelected == QUIT){
-			selection = -1;
-			field.changeContinued(QUIT);
-			optionSelected = -1;
+		switch (optionSelected) {
+			case CONTINUED:
+				selection = -1;
+				field.changeContinued(CONTINUED);
+				optionSelected = -1;
+				break;
+			case QUIT:
+				selection = -1;
+				field.changeContinued(QUIT);
+				optionSelected = -1;
+				break;
+			case RESUME:
+				selection = -1;
+				field.setPaused(false);
+				optionSelected = -1;
+				break;
+			case FORCEDQUIT: 
+				selection = -1;
+				game.enterState(GauchoSpace.MAIN_MENU,
+						new FadeOutTransition(Color.black),
+						new FadeInTransition(Color.black));
+				optionSelected = -1;
+				break;
 		}
 	}
 
 	@Override
 	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
+		if (field.getPaused()) {
+			if (newy > 520 && newy < 595) {
+				if (newx > 220 && newx < 445) {
+					selection = RESUME;
+				} else if (newx > 565 && newx < 715) {
+					selection = FORCEDQUIT;
+				} else selection = -1;
+			}
+			else selection = -1;
+		}
 		// boundary box for continue screen buttons
 		if (field.returnLives() <= 0){
 			if (newy > 490 && newy < 560) {
@@ -79,13 +118,9 @@ public class GameplayState extends BasicGameState {
 					selection = CONTINUED;
 				} else if (newx > 455 && newx < 605){
 					selection = QUIT;
-				} else {
-					selection = -1;
-				}
+				} else selection = -1;
 			}
-			else {
-				selection = -1;
-			}		
+			else selection = -1;
 		}
 		selectSoundTracker(selection);
 	}
@@ -93,7 +128,7 @@ public class GameplayState extends BasicGameState {
 	@Override
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 		super.mouseClicked(button, x, y, clickCount);
-		if (field.returnLives() <= 0){
+		if (field.returnLives() <= 0 || field.getPaused()){
 			if (optionSelected != selection) menuEnterFx.play(1, .4f);
 			optionSelected = selection;
 		}
@@ -143,6 +178,22 @@ public class GameplayState extends BasicGameState {
 				case Input.KEY_Z:
 					if (optionSelected != selection) menuEnterFx.play(1, .4f);
 					optionSelected = selection;
+					break;
+			}
+		} else if (field.getPaused()) {
+			switch (key) {
+				case Input.KEY_LEFT:
+				case Input.KEY_RIGHT:
+					selection = (selection == RESUME) ? FORCEDQUIT : RESUME;
+					selectSoundTracker(selection);
+					break;
+					
+				case Input.KEY_Z:
+					if (optionSelected != selection) menuEnterFx.play(1, .4f);
+					optionSelected = selection;
+					break;
+				case Input.KEY_ESCAPE:
+					selection = -1;
 					break;
 			}
 		}

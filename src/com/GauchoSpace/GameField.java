@@ -30,6 +30,7 @@ public class GameField {
 	private Collection<IBullet> enemyBullets;
 	private Image uiBackground;
 	private Image continueButton;
+	private Image pausedButton;
 	private Image enterName;
 	private boolean paused;
 	private boolean gameover;
@@ -53,6 +54,7 @@ public class GameField {
 		character = new TestPlayer(this);
 		uiBackground = new Image("res/background_ui.png");
 		continueButton = new Image("res/continue.png");
+		pausedButton = new Image("res/paused.png");
 		enterName = new Image("res/nametext.png");
 		ttf = new TrueTypeFont(new Font("Verdana", Font.BOLD, 30), true);
 		width = 858;
@@ -126,6 +128,7 @@ public class GameField {
 		return hiScore;
 	}
 
+	public boolean getPaused() { return paused; }
 	public String getName() { return name; }
 	public int getNameLength() { return name.length(); }
 
@@ -173,6 +176,10 @@ public class GameField {
 	public void setGameOver() {
 		gameover = true;
 	}
+	
+	public void setPaused(boolean value) {
+		paused = value;
+	}
 
 	/* -------- *
 	 * render() *
@@ -201,6 +208,7 @@ public class GameField {
 		if (paused) {
 			graphics.setColor(new Color(0, 0, 0, 192));
 			graphics.fillRect(0, 0, width, height);
+			pausedButton.draw(200,400);
 		}
 
 		// continue? screen
