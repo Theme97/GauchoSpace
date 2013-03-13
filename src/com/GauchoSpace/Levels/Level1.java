@@ -44,6 +44,11 @@ public class Level1 implements ILevel {
 			backgroundMusic.loop();
 		}
 		
+		// scroll bg image
+		backgroundImageDisplacement += 1;
+		if (backgroundImageDisplacement >= backgroundImage.getHeight())
+			backgroundImageDisplacement = 0;
+		
 		// first wave
 		if (ticks == 120) {
 			ArrayList<Vector2f> points = new ArrayList<Vector2f>();
@@ -106,7 +111,10 @@ public class Level1 implements ILevel {
 
 	@Override
 	public void renderBackground(GameField field, LevelManager manager, Graphics graphics) {
-		// TODO Auto-generated method stub
+		graphics.setClip(12, 12, 858, 1000);
+		graphics.drawImage(backgroundImage, -550, backgroundImageDisplacement);
+		graphics.drawImage(backgroundImage, -550, backgroundImageDisplacement - backgroundImage.getHeight());
+		graphics.clearClip();
 	}
 	
 	@Override
