@@ -15,6 +15,7 @@ import org.newdawn.slick.Input;
 
 import com.GauchoSpace.Levels.Level1;
 import com.GauchoSpace.Players.TestPlayer;
+import com.GauchoSpace.Levels.monochrome;
 
 
 public class MainMenuState extends BasicGameState {
@@ -139,6 +140,12 @@ public class MainMenuState extends BasicGameState {
 					game.enterState(GauchoSpace.SCORE_STATE, new FadeOutTransition(Color.black),
 		                    new FadeInTransition(Color.black));
 			}
+				else {
+					GameField field = GameField.getInstance();
+					field.init(new TestPlayer(field), new monochrome(), 0);
+					game.enterState(GauchoSpace.GAMEPLAY);
+					backgroundMusic.stop();
+				}
 		} else if (optionSelected == GauchoSpace.EXIT_STATE) {
 			// goes back if in mode selection menu
 			// otherwise exits
