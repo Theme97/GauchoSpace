@@ -24,7 +24,7 @@ import com.GauchoSpace.Players.*;
 public class GameField {
 	private LevelManager levelManager;
 	private ICharacter character;
-	private ICharacter boss;
+	private BossManager bossManager;
 	private Collection<ICharacter> enemies;
 	private Collection<IBullet> playerBullets;
 	private Collection<IBullet> enemyBullets;
@@ -67,7 +67,7 @@ public class GameField {
 
 		levelManager.load(level);
 
-		boss = null;
+		bossManager = new BossManager();
 		enemies = new Vector<ICharacter>();
 		playerBullets = new Vector<IBullet>();
 		enemyBullets = new Vector<IBullet>();
@@ -105,6 +105,7 @@ public class GameField {
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 	public int getTicks() { return levelManager.getTicks(); }
+	public BossManager getBossManager() { return bossManager; }
 	public Collection<IBullet> getPlayerBullets() { return playerBullets; }
 	public Collection<IBullet> getEnemyBullets() { return enemyBullets; }
 	public int returnContinued() { return continued; }
@@ -135,10 +136,6 @@ public class GameField {
 	// setters
 	public void addEnemy(ICharacter enemy) {
 		enemies.add(enemy);
-	}
-
-	public void setBoss(ICharacter boss) {
-		this.boss = boss;
 	}
 
 	public void addPlayerBullet(IBullet bullet) {
@@ -185,9 +182,6 @@ public class GameField {
 	 * render() *
 	 * -------- */
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics) {
-		// scale resolution
-		//graphics.scale(0.5f, 0.5f);
-
 		// draw UI background
 		uiBackground.draw();
 
@@ -195,14 +189,15 @@ public class GameField {
 		graphics.translate(12, 12);
 		graphics.setWorldClip(0, 0, width, height);
 
-		// render order: level background, enemies, boss, player, player bullets, enemy bullets, level foreground
+		// render order: level background, enemies, boss, player, player bullets, enemy bullets, level foreground, boss UI
 		levelManager.renderBackground(gc, game, graphics);
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
-		if (boss != null) boss.render(gc, game, graphics);
+		bossManager.renderBoss(gc, game, graphics);
 		character.render(gc, game, graphics);
 		for (IBullet bullet : playerBullets) bullet.render(gc, game, graphics);
 		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
 		levelManager.renderForeground(gc, game, graphics);
+		bossManager.renderUI(gc, game, graphics);
 
 		// pause screen
 		if (paused) {
@@ -304,7 +299,7 @@ public class GameField {
 		boolean checkCollisions = !cheatInvincibility && !character.getInvincibility();
 
 		// move enemies
-		if (boss != null) boss.update(gc, game, delta);
+		bossManager.update(gc, game, delta);
 		for (ICharacter enemy : enemies) enemy.update(gc, game, delta);
 
 		// move bullets
@@ -331,15 +326,15 @@ public class GameField {
 			}
 
 			// next, boss
-			if (boss != null && !bullet.isDeletable()) {
-				if (bullet.isColliding(boss)) {
-					score += 10;
-					bullet.onCollision(boss);
-					boss.tookDamage(bullet.getDamage());
-					if (boss.isDeletable()) {
-						continued = GameplayState.QUIT;
-						return;
-					}
+			if (!bullet.isDeletable() && bossManager.checkCollision(bullet)) {
+				ICharacter boss = bossManager.getBoss();
+			
+				score += 10;
+				bullet.onCollision(boss);
+				boss.tookDamage(bullet.getDamage());
+				if (boss.isDeletable()) {
+					continued = GameplayState.QUIT;
+					return;
 				}
 			}
 			

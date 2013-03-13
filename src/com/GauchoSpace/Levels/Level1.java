@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.Music;
 
+import com.GauchoSpace.BossManager;
 import com.GauchoSpace.Enemy;
 import com.GauchoSpace.GameField;
 import com.GauchoSpace.ILevel;
@@ -102,7 +103,10 @@ public class Level1 implements ILevel {
 			try {
 				Enemy enemy = new TestBoss(field, new Image("res/enemy_test.png"), 20, 200);
 				enemy.setMotion(new Lerp(429, -20, 429, 300, 120));
-				field.setBoss(enemy);
+				
+				BossManager bm = field.getBossManager();
+				bm.setBoss(enemy);
+				bm.startAttack(200, 60);
 			} catch (SlickException e) {
 				e.printStackTrace(); // TODO
 			}
