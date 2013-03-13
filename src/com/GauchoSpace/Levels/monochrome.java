@@ -96,7 +96,14 @@ public class monochrome implements ILevel {
 			resources.put("bg07", "res/monochrome/bg/07.png");
 			resources.put("bg08", "res/monochrome/bg/08.png");
 			resources.put("bg09", "res/monochrome/bg/09.png");
-			resources.put("bg99", "res/monochrome/bg/99.png");
+			resources.put("bg10", "res/monochrome/bg/10.png");
+			resources.put("bg11", "res/monochrome/bg/11.png");
+			resources.put("bg12", "res/monochrome/bg/12.png");
+			resources.put("bg13", "res/monochrome/bg/13.png");
+			resources.put("bg14", "res/monochrome/bg/14.png");
+			resources.put("bg15", "res/monochrome/bg/15.png");
+			resources.put("bg16", "res/monochrome/bg/16.png");
+			resources.put("bg17", "res/monochrome/bg/17.png");
 
 			resources.put("ring", "res/monochrome/ring.png");
 
@@ -508,8 +515,8 @@ public class monochrome implements ILevel {
 		actions.add(new TimedAction( 51.956 + 0.321, synthPattern(3)));
 		actions.add(new TimedAction( 51.956 + 0.643, synthPattern(4)));
 		actions.add(new TimedAction( 51.956 + 0.964, synthPattern(5)));
-		//actions.add(new TimedAction( 51.956 + 1.286, synthPattern(0)));
-		//actions.add(new TimedAction( 51.956 + 1.500, synthPattern(1)));
+		actions.add(new TimedAction( 51.956 + 1.286, synthPattern(0)));
+		actions.add(new TimedAction( 51.956 + 1.500, synthPattern(1)));
 		
 		// ?
 		actions.add(new TimedAction( 53.684, new Action() {
@@ -609,22 +616,26 @@ public class monochrome implements ILevel {
 		graphics.clearClip();
 		
 		// images
-		drawLevelImage(graphics, "bg01", elapsedTime,  0.540f,  7.097f, 150, 150,  5,  7); // Group 14 Presents
-		drawLevelImage(graphics, "bg02", elapsedTime,  7.097f, 14.254f,  30, 500,  3,  7); // monochrome
+		drawLevelImage(graphics, "bg01", elapsedTime,  0.540f,  7.097f, 0.9f, 150, 150,  5,  7, 0.9f); // Group 14 Presents
+		drawLevelImage(graphics, "bg02", elapsedTime,  7.097f, 14.254f, 0.9f,  30, 500,  3,  7, 0.9f); // monochrome
 		
-		drawLevelImage(graphics, "bg03", elapsedTime, 13.954f, 20.254f, 200, 160,  5,  5); // 振りほどいて
-		drawLevelImage(graphics, "bg04", elapsedTime, 15.670f, 21.112f, 440, 380, -5,  5); // 振りほどいて
-		drawLevelImage(graphics, "bg05", elapsedTime, 17.180f, 21.970f, 310, 570,  5, -5); // なみだの渦
-		drawLevelImage(graphics, "bg06", elapsedTime, 19.096f, 22.828f, 430, 790, -5, -5); // 飲み込まれて
+		drawLevelImage(graphics, "bg03", elapsedTime, 13.954f, 20.254f, 0.7f, 200, 160,  5,  5, 0.7f); // 振りほどいて
+		drawLevelImage(graphics, "bg04", elapsedTime, 15.670f, 21.112f, 0.7f, 440, 380, -5,  5, 0.7f); // 振りほどいて
+		drawLevelImage(graphics, "bg05", elapsedTime, 17.180f, 21.970f, 0.7f, 310, 570,  5, -5, 0.7f); // なみだの渦
+		drawLevelImage(graphics, "bg06", elapsedTime, 19.096f, 22.828f, 0.7f, 430, 790, -5, -5, 0.7f); // 飲み込まれて
 		
-		drawLevelImage(graphics, "bg07", elapsedTime, 20.812f, 27.562f, 285, 315,  5,  5); // どんなにただ
-		drawLevelImage(graphics, "bg08", elapsedTime, 22.526f, 28.420f, 420, 500, -3,  5); // 願おうとも
-		drawLevelImage(graphics, "bg09", elapsedTime, 24.034f, 29.278f, 300, 770,  3, -5); // 響かない歌声
+		drawLevelImage(graphics, "bg07", elapsedTime, 20.812f, 27.562f, 0.7f, 285, 315,  5,  5, 0.7f); // どんなにただ
+		drawLevelImage(graphics, "bg08", elapsedTime, 22.526f, 28.420f, 0.7f, 420, 500, -3,  5, 0.7f); // 願おうとも
+		drawLevelImage(graphics, "bg09", elapsedTime, 24.034f, 29.278f, 0.7f, 300, 770,  3, -5, 0.7f); // 響かない歌声
 		
-		//drawLevelImage(graphics, "bg10", elapsedTime, 34.524f, 41.078f, 200, 160,  5,  5); // 此処にいるの
-		//drawLevelImage(graphics, "bg11", elapsedTime, 36.234f, 41.078f, 440, 380, -5,  5); // 何処にいても
-		//drawLevelImage(graphics, "bg12", elapsedTime, 37.841f, 29.278f, 310, 570,  5, -5); // 誰でも
-		//drawLevelImage(graphics, "bg13", elapsedTime, 24.034f, 29.278f, 430, 790, -5, -5); // 良いんだから
+		drawLevelImage(graphics, "bg10", elapsedTime, 27.666f, 33.682f, 0.7f, 200, 160,  5,  5, 0.7f); // 誰の為に
+		drawLevelImage(graphics, "bg11", elapsedTime, 29.382f, 33.982f, 0.7f, 440, 380, -5,  5, 0.7f); // 何の為に
+		drawLevelImage(graphics, "bg12", elapsedTime, 30.885f, 34.282f, 0.7f, 310, 570,  5, -5, 0.7f); // 私はいる
+		drawLevelImage(graphics, "bg13", elapsedTime, 32.809f, 34.582f, 0.7f, 430, 790, -5, -5, 0.7f); // 忘れさせて
+		
+		drawLevelImage(graphics, "bg14", elapsedTime, 34.524f, 41.078f, 0.7f, 285, 315,  5,  5, 0.7f); // 此処にいるの
+		drawLevelImage(graphics, "bg15", elapsedTime, 36.234f, 41.378f, 0.7f, 420, 500, -3,  5, 0.7f); // 何処にいても
+		drawLevelImage(graphics, "bg16", elapsedTime, 37.841f, 43.378f, 0.7f, 300, 770,  3, -5, 0.7f); // 誰でも良いんだから
 
 		if (grayscaleRing > 0) {
 			resources.get("ring").draw(429 - grayscaleRing, 500 - grayscaleRing, (float)grayscaleRing / 512);
@@ -671,21 +682,21 @@ public class monochrome implements ILevel {
 		
 		// 優しくしないで
 		if (freeze) {
-			graphics.drawImage(resources.get("bg99"), 100, 650);
+			graphics.drawImage(resources.get("bg17"), 100, 650);
 		}
 	}
 
 	/* ------- *
 	 * Helpers *
 	 * ------- */
-	private void drawLevelImage(Graphics graphics, String ref, float time, float start, float end, float x, float y, float dx, float dy) {
+	private void drawLevelImage(Graphics graphics, String ref, float time, float start, float end, float fade, float x, float y, float dx, float dy, float alpha) {
 		if (start <= time && time < end) {
 			Image image = resources.get(ref);
 			float t = time - start;
-			if (t <= 0.9) {
-				image.setAlpha(t);
-			} else if (end - 0.9 < time) {
-				image.setAlpha(end - time);
+			if (t <= fade) {
+				image.setAlpha(alpha * t / fade);
+			} else if (end - fade < time) {
+				image.setAlpha(alpha * (end - time) / fade);
 			}
 			graphics.drawImage(image, x + t * dx, y + t * dy);
 		}
