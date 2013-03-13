@@ -3,6 +3,7 @@ package com.GauchoSpace.Levels;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
@@ -101,6 +102,16 @@ public class Level1 implements ILevel {
 				e.printStackTrace(); // TODO
 			}
 		}
+	}
+
+	@Override
+	public void renderBackground(GameField field, LevelManager manager, Graphics graphics) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void renderForeground(GameField field, LevelManager manager, Graphics graphics) {
+		// TODO Auto-generated method stub
 	}
 }
 

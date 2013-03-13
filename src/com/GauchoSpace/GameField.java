@@ -188,12 +188,14 @@ public class GameField {
 		graphics.translate(12, 12);
 		graphics.setWorldClip(0, 0, width, height);
 
-		// render order: enemies, boss, player, player bullets, enemy bullets
+		// render order: level background, enemies, boss, player, player bullets, enemy bullets, level foreground
+		levelManager.renderBackground(gc, game, graphics);
 		for (ICharacter enemy : enemies) enemy.render(gc, game, graphics);
 		if (boss != null) boss.render(gc, game, graphics);
 		character.render(gc, game, graphics);
 		for (IBullet bullet : playerBullets) bullet.render(gc, game, graphics);
 		for (IBullet bullet : enemyBullets) bullet.render(gc, game, graphics);
+		levelManager.renderForeground(gc, game, graphics);
 
 		// pause screen
 		if (paused) {
