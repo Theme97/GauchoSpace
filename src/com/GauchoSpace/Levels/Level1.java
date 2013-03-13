@@ -98,7 +98,7 @@ public class Level1 implements ILevel {
 		}
 		
 		// boss
-		if (ticks == 1200) {
+		if (ticks == 1000) {
 			try {
 				Enemy enemy = new TestBoss(field, new Image("res/bigboy.png"), 50, 200);
 				enemy.setMotion(new Lerp(429, -20, 429, 300, 120));
