@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import org.newdawn.slick.util.ResourceLoader;
+
 public class Shader {
 	int shaderProgram = glCreateProgram();
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -35,12 +37,10 @@ public class Shader {
 		glUseProgram(enable ? shaderProgram : 0);
 	}
 	
-	private String readFile(String filename) {
-		try {
-			return new Scanner(new File(filename)).useDelimiter("\\Z").next();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
+	private String readFile(String resource) {
+		Scanner scanner = new Scanner(ResourceLoader.getResourceAsStream(resource));
+		String data = scanner.useDelimiter("\\Z").next();
+		scanner.close();
+		return data;
 	}
 }

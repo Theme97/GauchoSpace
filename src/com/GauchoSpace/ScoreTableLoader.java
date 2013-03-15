@@ -2,6 +2,7 @@ package com.GauchoSpace;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
@@ -12,13 +13,15 @@ import java.util.Collections;
 public class ScoreTableLoader {
 	private String filePath;
 
-	public ScoreTableLoader(String filePath) throws FileNotFoundException, IOException {
+	public ScoreTableLoader(String filePath) {
 		this.filePath = filePath;
 	}
 
 	// Scans save file and assigns its names and values into an ArrayList
 	public ArrayList<ScoreRecord> loadScoreTable() throws FileNotFoundException, IOException {
-		FileReader fileReader = new FileReader(filePath);
+		File file = new File(filePath);
+		file.createNewFile(); // make file if it does not exist
+		FileReader fileReader = new FileReader(file);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		ArrayList<ScoreRecord> scoreList = new ArrayList<ScoreRecord>();
 		String line = null;
